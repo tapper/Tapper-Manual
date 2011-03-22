@@ -1,0 +1,323 @@
+*Tapper frontend commands*
+
+=head1 tapper-testrun
+
+Tool for accessing testrun database, scheduler, queues, hosts, etc.
+
+
+=head2 delete: Delete a testrun
+
+=head3 Usage
+
+ tapper-testruns delete [ --verbose | --really | --id=s@ ]
+
+	--verbose    some more informational output
+	--really     really execute the command
+	--id         delete particular testruns
+
+=head3 Synopsis
+
+ --really --id=12345
+
+
+=head2 deleteprecondition: Delete a precondition
+
+=head3 Usage
+
+ tapper-testruns deleteprecondition [ --verbose | --really | --id=s@ ]
+
+	--verbose    some more informational output
+	--really     really execute the command
+	--id         delete particular precondition
+
+=head3 Synopsis
+
+
+=head2 deletequeue: Delete an existing queue
+
+=head3 Usage
+
+ tapper-testruns listprecondition [ --verbose|v | --name=s | --really ]
+
+	-v --verbose   some more informational output
+	--name         TEXT; name of the queue to be changed
+	--really       really execute the command
+
+=head3 Synopsis
+
+
+=head2 list: List testruns
+
+=head3 Usage
+
+ tapper-testruns listprecondition [ --verbose|v | --running|r |
+                                     --all|a | --colnames | 
+                                     --host=s@ | --schedule|s | 
+                                     --id|i=i | --queue=s@ | 
+                                     --finished|f | --prepare|p ]
+
+	-v --verbose    print all output, without only print ids
+	-r --running    list running testruns, OR combined with other state filters
+	-a --all        list all testruns
+	--colnames      print out column names
+	--host          list testruns assigned to this queue, OR combined with other hosts,
+                        AND combined with other filters
+	-s --schedule   list scheduled testruns, OR combined with other state filters
+	-i --id         list particular testruns
+	--queue         list testruns assigned to this queue, OR combined with other queues,
+                        AND combined with other filters
+	-f --finished   list finished testruns, OR combined with other state filters
+
+=head3 Synopsis
+
+
+=head2 listhost: List hosts
+
+=head3 Usage
+
+ tapper-testruns listhost --verbose|v | --free | --name=s | --active | --queue=s@
+
+	-v --verbose   show all available information; without only show names
+	--free         list free hosts
+	--name         find host by name, implies verbose
+	--active       list active hosts
+	--queue        list hosts bound to this queue
+
+=head3 Synopsis
+
+
+=head2 listprecondition: List preconditions
+
+=head3 Usage
+
+ tapper-testruns listprecondition [ --quotevalues|q | --verbose|v | 
+                                     --testrun=i@ | --nonewlines | 
+                                     --id|i=i@ | --all|a | --colnames|c ]
+
+	-q --quotevalues   put quotes around the values
+	-v --verbose       Show all information of preconditions, otherwise only show ids
+	--testrun          assigned to given testrun id
+	--nonewlines       escape newlines in values to avoid multilines
+	-i --id            list particular precondition
+	-a --all           list all preconditions
+	-c --colnames      print out column names
+
+
+=head3 Synopsis
+
+
+=head2 listqueue: List queues
+
+=head3 Usage
+
+ tapper-testruns listqueue --minprio=s | --verbose|v | --maxprio=s
+
+	--minprio      INT; queues with at least this priority level
+	-v --verbose   show all available information; without only show names
+	--maxprio      INT; queues with at most this priority level
+
+=head3 Synopsis
+
+
+=head2 new: Create a new testrun
+
+=head3 Usage
+
+ tapper-testruns new [ --requested_host=s@ | --requested_feature=s@ | 
+                        --topic=s | --queue=s | --notes=s | 
+                        --shortname=s | --owner=s | --wait_after_tests=s | 
+                        --macroprecond=s | -Dkey=val | --auto_rerun]*
+
+	--priority                Boolean; This is a very important testrun that
+                                  should bypass scheduling and not wait for others
+	--shortname               TEXT; shortname
+	--verbose                 some more informational output
+	--earliest                STRING, default=now; don't start testrun before
+                                  this time (format: YYYY-MM-DD hh:mm:ss or now)
+	--requested_feature       String; description of one requested feature of a
+                                  matching host for this testrequest; 
+				  multiple requested features are AND evaluated,
+                                  i.e. each must fit; not evaluated if a matching
+                                  requested host is found already
+	--rerun_on_error          INT, retry this testrun this many times if an error occurs
+	--precondition            assigned precondition ids
+	--requested_host          String; name one possible host for this testrequest; 
+				  multiple requested hosts are OR evaluated, 
+                                  i.e. each is appropriate
+	--topic                   STRING, default=Misc; one of: 
+                                  Kernel, Xen, KVM, Hardware, Distribution, 
+                                  Benchmark, Software, Misc
+	--owner                   STRING, default=$USER; user login name
+	--macroprecond            STRING, use this macro precondition file
+	--wait_after_tests        BOOL, default=0; wait after testrun for human investigation
+	--notes                   TEXT; notes
+	-D                        Define a key=value pair used in macro preconditions
+	--auto_rerun              BOOL, default=0; put this testrun into db again when
+                                  it is chosen by scheduler
+	--queue                   STRING, default=AdHoc
+
+=head3 Synopsis
+
+
+=head2 newhost: Create a new host
+
+=head3 Usage
+
+ tapper-testruns newqueue --name=s [ --queue=s@ --active=s --verbose ]*
+
+	--verbose     some more informational output
+	--active      INT; MCP can use this host, default 0
+	--name        TEXT; name
+
+=head3 Synopsis
+
+
+=head2 newprecondition: Create a new precondition
+
+=head3 Usage
+
+ tapper-testrun newprecondition ( --condition=s | --condition_file=s )
+                                 [ --shortname=s ] [ --timeout=n ] [ --precondition=n ]* 
+
+	--verbose             some more informational output
+	--timeout             INT; stop trying to fullfill this precondition after timeout second
+	--condition           TEXT; condition description in YAML format (see Spec)
+	--condition_file      STRING; filename from where to read condition, 
+                              use - to read from STDIN
+	--shortname           TEXT; shortname that overrides the one in the yaml
+	--precondition        INT; assigned pre-precondition ids
+
+=head3 Synopsis
+
+
+=head2 newqueue: Create a new queue
+
+=head3 Usage
+
+ tapper-testruns newqueue --name=s --priority=s [ --verbose ]
+
+	--priority      INT; priority
+	--verbose       some more informational output
+	--active        set active flag to this value, prepend with no to unset
+	--name          TEXT; name
+
+=head3 Synopsis
+
+
+=head2 newscenario: Create a new testrun
+
+=head3 Usage
+
+ tapper-testruns newscenario --file=s
+
+	--verbose    some more informational output
+	-D           Define a key=value pair used in macro preconditions
+	--file       String; use macro scenario file
+
+
+=head3 Synopsis
+
+
+=head2 rerun: Create a new testrun based on existing one
+
+=head3 Usage
+
+ tapper-testruns rerun --testrun=s [ --notes=s ]?
+
+	--verbose      some more informational output
+	--notes        TEXT; notes
+	--testrun      INT, testrun to start again
+
+=head3 Synopsis
+
+
+=head2 show: Show details of a testrun
+
+=head3 Usage
+
+ tapper-testruns show [ --verbose | --id=s@ ]
+
+	--verbose    some more informational output
+	--id         list particular testruns
+
+=head3 Synopsis
+
+
+=head2 update: Create a new testrun
+
+=head3 Usage
+
+ tapper-testruns update --id=s [ --hostname=s | --topic=s | --notes=s | --shortname=s | --owner=s | --wait_after_tests=s ]*
+	--verbose               some more informational output
+	--notes                 TEXT; notes
+	--shortname             TEXT; shortname
+	--topic                 STRING, default=Misc; one of: Kernel, Xen, KVM,
+                                Hardware, Distribution, Benchmark, Software, Misc
+	--hostname              INT; the hostname on which the test should be run
+	--owner                 STRING, default=$USER; user login name
+	--wait_after_tests      BOOL, default=0; wait after testrun for human investigation
+	--earliest              STRING, default=now; don't start testrun before this time 
+                                (format: YYYY-MM-DD hh:mm:ss or now)
+	--precondition          assigned precondition ids
+	--id                    INT; the testrun id to change
+
+=head3 Synopsis
+
+
+=head2 updateprecondition: Update an existing precondition
+
+=head3 Usage
+
+ tapper-testrun updateprecondition --id=s [ --shortname=s | 
+                                             --condition=s | 
+                                             --condition_file=s ) 
+
+	-v --verbose          some more informational output
+	--shortname           TEXT; shortname
+	--timeout             INT; stop trying to fullfill this precondition after timeout second
+	--condition           TEXT; condition description in YAML format (see Spec)
+	--condition_file      STRING; filename from where to read condition,
+                              use - to read from STDIN
+	--precondition        INT; assigned pre-precondition ids
+	--id                  INT; the precondition id to change
+
+
+=head3 Synopsis
+
+
+=head2 updatequeue: Update an existing queue
+
+=head3 Usage
+
+ tapper-testruns updatequeue --name=s --priority=s [ --verbose ]
+
+	-p --priority     INT; priority
+	-v --verbose      some more informational output
+	--active          set active flag to this value, prepend with no to unset
+
+=head3 Synopsis
+
+
+
+=head1 tapper-api
+
+
+
+=head2 upload: Upload and attach a file to a report
+
+=head3 Usage
+
+ tapper-api upload --reportid=s --file=s [ --contenttype=s ]
+
+	--verbose           some more informational output
+	--reportid          INT; the testrun id to change
+	--file              STRING; the file to upload, use '-' for STDIN
+	--filename          STRING; alternate file name, especially when reading from STDIN
+	--reportserver      STRING; use this host for upload
+	--reportport        STRING; use this port for upload
+	--contenttype       STRING; content-type, default 'plain', 
+                            use 'application/octed-stream' for binaries
+
+=head3 Synopsis
+
+
