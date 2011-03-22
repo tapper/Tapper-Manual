@@ -1,4 +1,3 @@
-
 ### Makefile --- 
 
 # -------------------------------------------------------------------
@@ -101,7 +100,7 @@ web: html
 # implicit rules
 
 %.dvi: %.texi
-	texi2dvi -b $< -o $@
+	-texi2dvi -b $< -o $@
 
 %.eps: %.png
 	convert $< $@
@@ -116,7 +115,7 @@ web: html
 	convert $< $@
 
 %.pdf: %.texi
-	texi2pdf -b $< -o $@
+	-texi2pdf -b $< -o $@
 
 %.ps: %.dvi
 	dvips $<
