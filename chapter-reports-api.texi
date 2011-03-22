@@ -1,0 +1,445 @@
+@node Reports API, Complete Use Cases, Web User Interface, Top
+@chapter Reports API
+
+@menu
+* Overview::                    
+* Raw API Commands::            
+* Query language DPath::        
+* Client Utility tapper-api::  
+@end menu
+
+@c ======================================================================
+
+@node Overview, Raw API Commands, Reports API, Reports API
+@section Overview
+
+There runs yet another daemon, the so called
+@code{Tapper::Reports::API}, on the same host where already the
+@code{TAP Receiver} runs. This @samp{Reports API} is meant for
+everything that needs more than just dropping TAP reports to a port,
+e.g., some interactive dialog or parameters.
+
+This @code{Tapper::Reports::API} listens on Port @code{7358}. Its API
+is modeled after classic unix script look&feel with a first line
+containing a description how to interpret the rest of the lines.
+
+The first line consists of a shebang (@code{#!}), a @dfn{api command}
+and @dfn{command parameters}. The rest of the file is the
+@dfn{payload} for the @dfn{api command}.
+
+The syntax of the @samp{command params} varies depending on the
+@samp{api command} to make each command intuitively useable. Sometimes
+they are just positional parameters, sometimes they look like the
+start of a HERE document (i.e., they are prefixed with @code{<<} as
+you can see below).
+
+
+@c ======================================================================
+
+@node Raw API Commands, Query language DPath, Overview, Reports API
+@section Raw API Commands
+
+In this section the raw API is described. That's the way you can use
+without any dependencies except for the minimum ability to talk to a
+port, e.g., via @code{netcat}.
+
+See section @ref{tapper-api} for how to use a dedicated command line
+utility that makes talking to the reports API easier, but is a
+dependency that might not be available in your personal test
+environment.
+
+@c ----------------------------------------------------------------------
+
+@menu
+* upload aka. attach a file to a report::  
+* download - download a file which is attached to a report::  
+* mason - Render templates with embedded query language ::  
+@end menu
+
+@node upload aka. attach a file to a report, download - download a file which is attached to a report, Raw API Commands, Raw API Commands
+@subsection upload aka. attach a file to a report
+
+This api command lets you upload files, aka. attachments, to
+reports. These files are available later through the web
+interface. Use this to attach log files, config files or console
+output.
+
+@menu
+* upload Synopsis::             
+* Parameters::                  
+* upload Payload::              
+* upload Example usage::        
+@end menu
+
+@node upload Synopsis, Parameters, upload aka. attach a file to a report, upload aka. attach a file to a report
+@subsubsection upload Synopsis
+
+@verbatim
+#! upload REPORTID FILENAME [ CONTENTTYPE ]
+payload
+@end verbatim
+
+@node Parameters, upload Payload, upload Synopsis, upload aka. attach a file to a report
+@subsubsection Parameters
+
+@itemize
+
+@item REPORTID
+
+The id of the report to which the file is assigned
+
+@item FILENAME
+
+The name of the file
+
+@item CONTENTTYPE
+
+Optional MIME type; defaults to @code{plain}; use
+@code{application/octet-stream} to make it downloadable later in
+browser.
+
+@end itemize
+
+@node upload Payload, upload Example usage, Parameters, upload aka. attach a file to a report
+@subsubsection upload Payload
+
+The raw content of the file to upload.
+
+@node upload Example usage,  , upload Payload, upload aka. attach a file to a report
+@subsubsection upload Example usage
+
+Just @code{echo} the first api-command line and then immediately
+@code{cat} the file content:
+
+@verbatim
+$ ( echo "#! upload 552 xyz.tmp" ; cat xyz.tmp ) | netcat -w1 bascha 7358
+@end verbatim
+
+@c ----------------------------------------------------------------------
+
+@node download - download a file which is attached to a report, mason - Render templates with embedded query language , upload aka. attach a file to a report, Raw API Commands
+@subsection download - download a file which is attached to a report
+
+This api command lets you download files, aka. attachments, from
+reports. 
+
+@menu
+* download Synopsis::           
+* download Parameters::         
+* download Example usage::      
+@end menu
+
+@node download Synopsis, download Parameters, download - download a file which is attached to a report, download - download a file which is attached to a report
+@subsubsection download Synopsis
+
+@verbatim
+#! upload REPORTID FILENAME
+@end verbatim
+
+There is no other payload neccessary here, just this single line.
+
+@node download Parameters, download Example usage, download Synopsis, download - download a file which is attached to a report
+@subsubsection download Parameters
+
+@itemize
+
+@item REPORTID
+
+The id of the report to which the file is assigned
+
+@item FILENAME
+
+The name of the file as it was specified on upload
+
+@end itemize
+
+@node download Example usage,  , download Parameters, download - download a file which is attached to a report
+@subsubsection download Example usage
+
+Just @code{echo} the first api-command line and redirect the answer
+into a file.
+
+@verbatim
+$ ( echo "#! download 552 xyz.tmp" ) | netcat -w1 bascha 7358 > xyz.tmp
+@end verbatim
+
+@c ----------------------------------------------------------------------
+
+@node mason - Render templates with embedded query language ,  , download - download a file which is attached to a report, Raw API Commands
+@subsection mason - Render templates with embedded query language 
+
+To query report results we provide sending templates to the API in
+which you can use a query language to get report details: This
+api-command is called like the template engine so that we can provide
+other template engines as well.
+
+@menu
+* mason Synopsis::              
+* mason Parameters::            
+* Payload::                     
+* Example usage::               
+@end menu
+
+@node mason Synopsis, mason Parameters, mason - Render templates with embedded query language , mason - Render templates with embedded query language
+@subsubsection mason Synopsis
+
+@verbatim
+#! mason debug=0 <<ENDMARKER
+payload
+ENDMARKER
+@end verbatim
+
+@node mason Parameters, Payload, mason Synopsis, mason - Render templates with embedded query language
+@subsubsection mason Parameters
+
+@itemize
+
+@item debug=1
+
+If @samp{debug} is specified and value set to 1 then any error message
+that might occur is reported as result content. If debug is omitted or
+false and an error occurs then the result is just empty.
+
+@item <<ENDMARKER 
+
+You can choose any word instead of ENDMARKER which should mark the end
+of input, like in HERE documents, usually some word that is not
+contained in the template payload.
+
+@end itemize
+
+@node Payload, Example usage, mason Parameters, mason - Render templates with embedded query language
+@subsubsection mason Payload
+
+A mason template. 
+
+@dfn{Mason} is a template language, see
+@url{http://masonhq.com}. Inside the template we provide a function
+@code{reportdata} to access report data via a query language. See
+section @ref{Query language} for details about this.
+
+@node Example usage,  , Payload, mason - Render templates with embedded query language
+@subsubsection Example usage
+
+This is a raw Mason template:
+
+@verbatim
+ % my $world = "Mason World";
+ Hello <% $world %>!
+ % my @res = reportdata '{ "suite.name" => "perfmon" } :: //tap/tests_planned';
+ Planned perfmon tests:
+ % foreach (@res) {
+    <% $_ %>
+ % }
+@end verbatim
+
+If you want to submit such a Mason template you can add the
+api-command line and the EOF marker like this:
+
+@verbatim
+$ EOFMARKER="MASONTEMPLATE".$$
+$ payload_file="perfmon_tests_planned.mas"
+$ ( echo "#! mason <<$EOFMARKER" ; cat $payload_file ; echo "$EOFMARKER" ) \
+    | netcat -w1 bascha 7358
+@end verbatim
+
+The output of this is the rendered template. You can extend the line
+to save the rendered result into a file:
+
+@verbatim
+$ ( echo "#! mason <<$EOFMARKER" ; cat $payload_file ; echo "$EOFMARKER" ) \
+    | netcat -w1 bascha 7358 > result.txt
+@end verbatim
+
+The answer for this looks like this:
+
+@verbatim
+Hello Mason World!
+Planned perfmon tests:
+   3
+   4
+   17
+@end verbatim
+
+@anchor{Query language}
+@node Query language DPath, Client Utility tapper-api, Raw API Commands, Reports API
+@section Query language DPath
+
+The query language, which is the argument to the @code{reportdata} as
+used embedded in the @samp{mason} examples above:
+
+@verbatim
+ reportdata '{ "suite.name" => "perfmon" } :: //tap/tests_planned'
+@end verbatim
+
+consists of 2 parts, divided by the @samp{::}.
+
+We call the first part in braces @emph{reports filter} and the second
+part @emph{data filter}.
+
+@menu
+* Reports Filter (SQL-Abstract)::  
+* Data Filter::                 
+* Optimizations::               
+@end menu
+
+@node Reports Filter (SQL-Abstract), Data Filter, Query language DPath, Query language DPath
+@subsection Reports Filter (SQL-Abstract)
+
+The @emph{reports filter} selects which reports to look at. The
+expression inside the braces is actually a complete
+@code{SQL::Abstract} expression
+(@url{http://search.cpan.org/~mstrout/SQL-Abstract/}) working
+internally as a @code{select} in the context of the object relational
+mapper, which targets the table @code{Report} with an active JOIN to
+the table @code{Suite}.
+
+All the matching reports are then taken to build a data structure for
+each one, consisting of the table data and the parsed TAP part which
+is turned into a data structure via @code{TAP::DOM}
+(@url{http://search.cpan.org/~schwigon/TAP-DOM/}).
+
+The @emph{data filter} works then on that data structure for each
+report.
+
+@menu
+* SQL-Abstract expressions::    
+* The data structure::          
+@end menu
+
+@node SQL-Abstract expressions, The data structure, Reports Filter (SQL-Abstract), Reports Filter (SQL-Abstract)
+@subsubsection SQL::Abstract expressions
+
+The filter expressions are best described by example:
+
+@itemize
+
+@item Select a report by ID
+@verbatim
+{ 'id' => 1234 }
+@end verbatim
+
+@item Select a report by suite name
+@verbatim
+{ 'suite_name' => 'oprofile' }
+@end verbatim
+
+@item Select a report by machine name
+@verbatim
+{ 'machine_name' => 'bascha' }
+@end verbatim
+
+@item Select a report by date
+
+Here the value that you want to select is a structure by itself,
+consisting of the comparison operator and a time string:
+
+@verbatim
+{ 'created_at' => { '<', '2009-04-09 10:00' }  }
+@end verbatim
+
+@end itemize
+
+@node The data structure,  , SQL-Abstract expressions, Reports Filter (SQL-Abstract)
+@subsubsection The data structure
+
+@node Data Filter, Optimizations, Reports Filter (SQL-Abstract), Query language DPath
+@subsection Data Filter
+
+The data structure that is created for each report can be evaluated
+using the @emph{data filter} part of the query language, i.e.,
+everything after the @code{::}. This part is passed through to
+@code{Data::DPath}
+(@url{http://search.cpan.org/~schwigon/Data-DPath/}).
+
+@menu
+* Data-DPath expressions::      
+@end menu
+
+@node Data-DPath expressions,  , Data Filter, Data Filter
+@subsubsection Data-DPath expressions
+
+
+@node Optimizations,  , Data Filter, Query language DPath
+@subsection Optimizations
+
+Using the query language can be slow. The biggest slowdown occurs with
+the @samp{ANYWHERE} element @code{//}, again with several of them,
+because they span up a big search tree.
+
+Therefore, if you know the depth of your path, try to replace the
+@code{//} with some @code{*} because that only spans up on the current
+step not every possible step, like this:
+
+@verbatim
+  { ... } :: //section/stats-proc-interrupts-before//tap//data/TLB";
+@end verbatim
+
+@verbatim
+  { ... } :: /results/*/section/stats-proc-interrupts-before/tap/lines/*/_children/*/data/TLB";
+@end verbatim
+
+
+
+@c ======================================================================
+
+@anchor{tapper-api}
+@node Client Utility tapper-api,  , Query language DPath, Reports API
+@section Client Utility tapper-api
+
+There is a command line utility @code{tapper-api} that helps with
+using the API without the need to talk the protocol and fiddle with
+@code{netcat} by yourself.
+
+@menu
+* help::                        
+* upload::                      
+* mason::                       
+@end menu
+
+@node help, upload, Client Utility tapper-api, Client Utility tapper-api
+@subsection help
+
+You can aquire a help page to each sub command:
+
+@verbatim
+$ /opt/tapper/perl/bin/tapper-api help upload
+@end verbatim
+
+prints
+
+@verbatim
+tapper-api upload --reportid=s --file=s [ --contenttype=s ]
+   --verbose          some more informational output
+   --reportid         INT; the testrun id to change
+   --file             STRING; the file to upload, use '-' for STDIN
+   --contenttype      STRING; content-type, default 'plain', 
+                      use 'application/octed-stream' for binaries
+@end verbatim
+
+@node upload, mason, help, Client Utility tapper-api
+@subsection upload
+
+Use it from the Tapper path, like:
+
+@verbatim
+$ /opt/tapper/perl/bin/tapper-api upload \
+  --file /var/log/messages \
+  --reportid=301
+@end verbatim
+
+You can also use the special filename @file{-} to read from STDIN,
+e.g., if you need to pipe the output of tools like @code{dmesg}:
+
+@verbatim
+$ dmesg | /opt/tapper/perl/bin/tapper-api upload \
+  --file=- \
+  --filename dmesg \
+  --reportid=301
+@end verbatim
+
+@node mason,  , upload, Client Utility tapper-api
+@subsection mason
+
+TODO
+

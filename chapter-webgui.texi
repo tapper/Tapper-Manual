@@ -1,0 +1,211 @@
+@node Web User Interface, Reports API, Command line interface, Top
+@chapter Web User Interface
+
+The Web User Interface is a frontend to the Reports database. It
+allows to overview reports that came in from several machines, in
+several test suites.
+
+It can filter the results by dates, machines or test suite, gives
+colorful (RED/YELLOW/GREEN) overview about success/failure ratios,
+allows to zoom into details of single reports.
+
+To evaluate reported test results in a more programmatic way, have a
+look into the @emph{DPath Query Language} that is part of the
+@ref{Reports API}.
+
+@section Usage
+
+The main URL is typically somerthing like
+
+@example
+@url{http://tapper/tapper}
+@end example
+
+
+@section Understanding Tapper Details
+
+@subsection Part 1 Overview
+
+@itemize
+
+@item Go to @url{https://tapper/tapper/reports}
+
+@item Click ``Last weeks test reports'', 
+  aka. @url{https://tapper/tapper/reports/date/7}
+
+@item Below day ``Wed Oct 7, 2009'' find the line 
+
+@verbatim
+    20856  2009-10-07  Topic-xen-unstable  satyr  PASS testrun 9617
+@end verbatim
+
+  To find this report you probably need to go more back into the past
+  than just 7 days, or you use the direct link below.
+
+@item Note that there are other reports in this group that are greyed-out,
+  i.e. all report ids of this testrun are:
+
+@verbatim
+    20856    Topic-xen-unstable
+    20855    LMBench
+    20854    CTCS
+    20852    Host-Overview
+    20851    Hardwaredb Overview
+@end verbatim
+
+@item Note that something FAILed in the CTCS run (20854).
+
+@item What we know until here:
+
+@itemize
+
+@item It is a test for Xen-unstable (Topic-xen-unstable)
+
+@item The running of the guests+suites itself worked well (20856 PASS)
+
+@item There were 2 guest runs: 
+
+@verbatim
+        LMBench      satyr:celegorm                  PASS
+        CTCS         satyr:eriador                   FAIL
+@end verbatim
+
+@end itemize
+
+@item Click on the ID link ``20856''
+  aka. @url{https://tapper/tapper/reports/id/20856}
+
+@end itemize
+
+
+@subsection Part 2 Details
+
+
+@itemize
+
+@item Here you see the details of this report 20856.
+
+You see:
+
+
+@itemize
+
+@item green PASSED results for the ``MCP overview''. 
+      This means the starting and finishing of the guests worked.
+
+@item attachments of console logs.
+
+@item some links to more information (raw TAP report, preconditions)
+
+@end itemize
+
+
+@item Note below the group of all the other reports, again it's the group
+  of those IDs:
+
+@verbatim
+    20856    Topic-xen-unstable
+    20855    LMBench
+    20854    CTCS
+    20852    Host-Overview
+    20851    Hardwaredb Overview
+@end verbatim
+
+@item The most meta information is in ``20852 Host-Overview''.
+
+@item Click on the ID link ``20852''
+  aka. @url{https://tapper/tapper/reports/id/20852}
+
+@item Now you see the details of ``20852 Host-Overview'' with 
+lots of meta information as ``Context''.
+
+You see:
+
+@verbatim
+  Metainfo
+      cpuinfo: 	1x Family: 15, Model: 67, Stepping: 2
+      ram: 	3950 MB
+      uptime: 	0 hrs
+
+  XEN-Metainfo
+      xen_dom0_kernel: 	2.6.18.8-xen x86_64
+      xen_base_os_description: 	SUSE Linux Enterprise Server 10 SP2 (x86_64)
+      xen_changeset: 	20273:10cfcbef68ee
+      xen_version: 	3.5-unstable
+
+  guest_1_redhat_rhel5u4_32bpae_qcow
+      xen_guest_description: 	001-lmbench
+      xen_guest_flags: 	…
+      xen_guest_start: 	…
+
+  guest_2_suse_sles10_sp3_gmc_32b_up_qcow
+      xen_guest_description: 	002-ctcs
+      xen_guest_flags: 	…
+      xen_guest_start: 	…
+@end verbatim
+
+
+@item If you are interested in what went wrong in the CTCS run, 
+  click on ID link ``20854''
+  aka. @url{https://tapper/tapper/reports/id/20854}
+
+@item Here you see 
+
+@itemize
+
+@item one RED bar in CTCS-results
+
+@item several RED bars in var_log_messages
+
+@end itemize
+
+You can click on them to unfold the details.
+
+@end itemize
+
+
+@subsection Part 3 Testrun
+
+@itemize
+
+@item Imagine that the testrun completely failed and no usable reports
+  arrived in, except that primary one from the MCP, then you can use the
+  link at the end of the line
+
+@verbatim
+    20856  2009-10-07  Topic-xen-unstable  satyr  PASS testrun 9617
+                                                       ------------ 
+@end verbatim
+
+@item Click on that link ``testrun 9617''
+  aka. @url{https://tapper/tapper/testruns/id/9617}
+
+@item That contains the description what was @strong{planned} 
+in this testrun, regardless of whether it succeeded.
+
+(That's the main difference between the two complementary concepts
+``Testrun'' vs. ``Reports''. The ``Testrun'' contains the
+specification, the ``Reports'' contain the results.)
+
+You see:
+
+@verbatim
+  Name                  Automatically generated Xen test
+  Host
+      Architecture      linux64
+      Root image        …/suse_sles10_sp2_64b_smp_raw.tar.gz
+      Test              metainfo
+  Guest number 1
+      Architecture      linux32
+      Root image        …/redhat_rhel5u4_32bpae_qcow.img
+      Test              py_lmbench
+  Guest number 2
+      Architecture 	linux32
+      Root image 	…/suse_sles10_sp3_gmc_32b_up_qcow.img
+      Test              py_ctcs
+@end verbatim
+
+
+@item That's it, basically.
+
+@end itemize

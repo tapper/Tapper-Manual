@@ -1,0 +1,50 @@
+Tapper-Handbook
+===============
+
+Tapper User manual - How to work with Tapper
+
+
+Building the manual
+===================
+
+The handbook is based on Texinfo, so you need some dependencies:
+
+   sudo apt-get install texinfo
+   sudo apt-get install texlive
+
+Then run
+
+   make     ... create DVI file
+   make pdf ... create PDF file
+   make ps  ... create Postscript file
+   make zip ... Create a *.zip distribution containing the manual
+   make tgz ... Create a *.tgz distribution containing the manual
+
+
+About Tapper
+============
+
+Tapper is an infrastructure for all aspects of testing 
+inclusive Operating Systems and Virtualization.
+
+Tapper contains
+
+ - Automation
+ - Machine Scheduling
+ - Command line utils
+ - Web Frontend application
+ - Support for writing tests
+ - Powerful result evaluation API
+ - Testplan support with TaskJuggler
+ - Many use-cases from tracking test results to
+   benchmarking to full OS testing including virtualization
+
+More information about Tapper:
+
+ - https://github.com/amd/Tapper-Doc/
+ - http://search.cpan.org/~amd/Tapper-Doc/
+
+Other Tapper subprojects:
+
+ - https://github.com/amd
+ - http://search.cpan.org/~amd

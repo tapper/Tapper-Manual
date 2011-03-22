@@ -1,0 +1,338 @@
+@node Complete Use Cases, , Reports API, Top
+@chapter Complete Use Cases
+
+In this chapter we describe how the single features are put together
+into whole use-cases.
+
+@section Automatic Xen testing
+
+This is a description on how to run Xen tests with Tapper using
+@code{SLES10} with one @code{RHEL5.2} guest (64 bit) as an example.
+
+The following mainly applies to @b{manually} assigning Xen tests. In
+the OSRC we use @emph{temare} (not yet published) to automatically
+create the here described steps.
+
+@subsection Paths
+
+@itemize
+
+@item Host @strong{tapper}: /data/tapper/live/
+
+@item Host @strong{osko}: /export/image_files/official_testing/
+
+@end itemize
+ 
+@subsection Choose an image for Dom0 and images for each guest
+ 
+We use suse/suse_sles10_64b_smp_raw.tar.gz as Dom0 and
+
+@verbatim
+
+ osko:/export/images/testing/raw/redhat_rhel5u2_64b_smp_up_small_raw.img
+
+@end verbatim
+
+as the only guest.
+ 
+The SuSE image is of precondition type image. Thus its path is
+relative to @code{/mnt/images} which has
+@code{tapper:/data/tapper/live/repository/images/} mounted.
+
+The root partition is named in the section @samp{root} of the Xen
+precondition. Furthermore, you need to define the destination
+partition to be Dom0 root. We use @code{/dev/sda2} as an example. The
+partition could also be named using its UUID or partition label. Thus
+you need to add the following to the dom0 part of the Xen
+precondition:
+
+@verbatim
+
+  root: 
+    precondition_type: image
+    mount: / 
+    image: suse/suse_sles10_64b_smp_raw.tar.gz 
+    partition: /dev/sda2
+
+@end verbatim
+ 
+The RedHat image is of type @samp{copyfile}. 
+
+It is copied from
+@code{osko:/export/image_files/official_testing/raw_img/} which is
+mounted to @code{/mnt/nfs} before. 
+
+This mounting is done automatically because the protocol type nfs is
+given. The image file is copied to the destination named as dest in
+the @samp{copyfile} precondition. We use @code{/xen/images/} as an
+example. To allow the System Installer to install preconditions into
+the guest image, the file to mount and the partition to mount need to
+be named. Note that even though in some cases, the mountfile can be
+determined automatically, in other cases this is not possible
+(e.g. when you get it from a tar.gz package). The resulting root
+secition for this guest is:
+
+@verbatim
+ 
+   root:
+     precondition_type: copyfile
+     name: osko:/export/images/testing/raw/redhat_rhel5u2_64b_smp_up_small_raw.img
+     protocol: nfs
+     dest: /xen/images/
+     mountfile: /xen/images/redhat_rhel5u2_64b_smp_up_small_raw.img
+     mountpartition: p1
+
+@end verbatim
+ 
+@subsection PRC configuration
+ 
+PRC (Program Run Control) is responsible for starting guests and test
+suites.
+ 
+@subsubsection Guest Start Configuration
+
+Making PRC able to start Xen guests is very simple. Every guest entry
+needs to have a section named "config". In this section, a
+precondition describing how the config file is installed and a
+filename have to be given. As for guest images the file name is needed
+because it can't be determined in some cases. We use 001.svm installed
+via copyfile to /xen/images/001.svm. The resulting config section is:
+
+@verbatim
+ 
+     config:
+       precondition_type: copyfile
+       name: /usr/share/tapper/packages/mhentsc3/001.svm
+       protocol: local
+       dest: /xen/images/
+       filename: /xen/images/001.svm
+
+@end verbatim
+ 
+@subsubsection Testsuite Configuration
+ 
+You need to define, where you want which test suite to run. This can
+be done in every guest and the Dom0. In this example, the Dom0 and the
+single guest will run different testsuites. this chapter only
+describes the Dom0 test program. See the summary at the end for
+details on the guest test program.
+
+The section testprogram consists of a precondition definition
+describing how the test suite is installed. In our example we use a
+precondition type package with a relative path name. This path is
+relative to
+'''/data/tapper/live/repository/packages/'''. Since
+'''tapper:/data/tapper/''' is mounted to '''/data/tapper/''' in
+the install system, this directory can be accessed at
+'''tapper:/data/tapper/live/repository/packages/'''.
+ 
+Beside the precondition you need to define an execname which is the
+full path name of the file to be executed (remember, it can't be
+determined). This file is called in the root directory ('''/''') in
+the test system thus in case you need to use relative paths inside
+your test suite they need to be relative to this. The program may take
+parameters which are named in the optional array '''parameters''' and
+taken as is. The parameter is '''timeout_after_testprogram''' which
+allows you to define that your test suite shall be killed (and an
+error shall be reported) after that many seconds. Even though this
+parameter is optional, leaving it out will result in Tapper waiting
+forever if your test doesn't send finish messages. The resulting
+testprogram section looks like this:
+
+@verbatim
+ 
+   testprogram:
+     precondition_type: package
+     filename: tapper-testsuite-system.tar.gz
+     path: mhentsc3/
+     timeout_after_testprogram: ~
+     execname: /opt/system/bin/tapper_testsuite_system.sh 
+     parameters: 
+       - --report
+
+@end verbatim
+ 
+@subsection Preconditions
+ 
+Usually your images will not have every software needed for your tests
+installed. In fact the example images now do but for the purpose of
+better explanation we assume that we need to install dhcp, python-xml
+and bridge-utils in Dom0. Furthermore we need a script to enable
+network and console. At last we install the Xen package and a Xen
+installer package. These two are still needed on our test
+images. Package preconditions may have a '''scripts''' array attached
+that name a number of programs to be executed after the package was
+installed. This is used in our example to call the Xen installer
+script after the Xen package and the Xen installer package were
+installed. See the summary at the end for the resulting precondition
+section.  The guest image only needs a DHCP client. Since this
+precondition is appended to the precondition list of the appropriate
+guest entry, the System Installer will automatically know that the
+guest image has to be mounted and the precondition needs to be
+installed inside relative to this mount.
+ 
+@subsection Resulting YAML config
+ 
+After all these informations are gathered, put the following YAML text
+into a file. We use /tmp/xen.yml as an example.
+
+@verbatim
+ 
+   precondition_type: xen
+   name: SLES 10 Xen with RHEL5.2 guest (64 bit)
+   dom0:
+     root:
+       precondition_type: image
+       mount: /
+       image: suse/suse_sles10_64b_smp_raw.tar.gz
+       partition: /dev/sda2
+     testprogram:
+       precondition_type: package
+       filename: tapper-testsuite-system.tar.gz
+       path: mhentsc3/
+       timeout_after_testprogram: 3600
+       execname: /home/tapper/x86_64/bin/tapper_testsuite_ctcs.sh
+       parameters: 
+         - --report
+     preconditions:
+       - precondition_type: package
+         filename: dhcp-3.0.3-23.33.x86_64.rpm
+         path: mhentsc3/sles10/
+       - precondition_type: package
+         filename: dhcp-client-3.0.3-23.33.x86_64.rpm
+         path: mhentsc3/sles10/
+       - precondition_type: package
+         filename: python-xml-2.4.2-18.7.x86_64.rpm
+         path: mhentsc3/sles10/
+       - precondition_type: package
+         filename: bridge-utils-1.0.6-14.3.1.x86_64.rpm
+         path: mhentsc3/sles10/
+   # has to come BEFORE xen because config done in here is needed for xens initrd
+       - precondition_type: package
+         filename: network_enable_sles10.tar.gz
+         path: mhentsc3/sles10/
+         scripts:
+           - /bin/network_enable_sles10.sh
+       - precondition_type: package
+         filename: xen-3.2_20080116_1546_16718_f4a57e0474af__64bit.tar.gz
+         path: mhentsc3/
+         scripts: ~
+       - precondition_type: package
+         filename: xen_installer_suse.tar.gz
+         path: mhentsc3/sles10/
+         scripts:
+           - /bin/xen_installer_suse.pl
+   # only needed for debug purpose
+       - precondition_type: package
+         filename: console_enable.tar.gz
+         path: mhentsc3/
+         scripts:
+           - /bin/console_enable.sh
+   guests:
+     - root:
+         precondition_type: copyfile
+         name: osko:/export/images/testing/raw/redhat_rhel5u2_64b_smp_up_small_raw.img
+         protocol: nfs
+         dest: /xen/images/
+         mountfile: /xen/images/redhat_rhel5u2_64b_smp_up_small_raw.img
+         mountpartition: p1
+         #       mountpartition: /dev/sda3 # or label or uuid
+       config:
+         precondition_type: copyfile
+         name: /usr/share/tapper/packages/mhentsc3/001.svm
+         protocol: local
+         dest: /xen/images/
+         filename: /xen/images/001.svm
+       testprogram:
+         precondition_type: copyfile
+         name: /usr/share/tapper/packages/mhentsc3/testscript.pl
+         protocol: local
+         dest: /bin/
+         timeout_after_testprogram: 100
+         execname: /bin/testscript.pl
+       preconditions:
+         - precondition_type: package
+           filename: dhclient-4.0.0-6.fc9.x86_64.rpm
+           path: mhentsc3/fedora9/
+
+@end verbatim
+ 
+@subsection Grub
+ 
+For Xen to run correctly, the defaults grub configuration is not
+sufficient. You need to add another precondition to your test. System
+Installer will replace @code{$root} with the @code{/dev/*} notation of
+the root partition and @code{$grubroot} with the grub notation of the
+root partition (including parenthesis). Put the resulting precondition
+into a file. We use @code{/tmp/grub.yml} as an example. This file may
+read like this:
+
+@verbatim
+ 
+  precondition_type: grub
+  config: |
+   serial --unit=0 --speed=115200
+   terminal serial
+   timeout 3
+   default 0
+   title XEN-test
+     root $grubroot
+     kernel /boot/xen.gz com1=115200,8n1 console=com1
+     module /boot/vmlinuz-2.6.18.8-xen root=$root showopts console=ttyS0,115200
+     module /boot/initrd-2.6.18.8-xen 
+
+@end verbatim
+ 
+@subsection Order Testrun
+
+To order your test run with the previously defined preconditions you
+need to stuff them into the database. Fortunatelly there are
+commandline tools to help you with this job. They can be found at
+@code{/opt/tapper/perl/perls/current/bin}. In our production
+environment the server for Tapper is @code{tapper}. Log in to this
+server (as use @code{tapper}). Make sure that
+@code{/opt/tapper/perl/perls/current/bin/} is at the beginning of your
+@code{$PATH} (so the correct perl will always be found). For each
+precondition you want to put into the database you need to define a
+short name. Call @code{tapper-testrun newprecondition} with the
+appropriate options, e.g. in our example:
+
+@verbatim
+ 
+ $ tapper-testrun newprecondition --shortname=grub \
+                                  --condition_file=/tmp/grub.yml
+
+ $ tapper-testrun newprecondition --shortname=xen \
+                                  --condition_file=/tmp/xen.yml
+
+@end verbatim
+ 
+@code{tapper-testrun} will return a precondition ID in each case. You
+will need those soon so please keep them in mind. In the example the
+precondition id for grub is 4 and for Xen its 5.
+ 
+You can now put your test run into the database using
+@code{tapper-testrun new}. This expects a hostname, a test program and
+all preconditions. The test program is never evaluated and only there
+for historical reasons. Put in anything you like. Add @code{--owner}
+with an appropriate user if you don't want the default
+@code{tapper}. The resulting call looks like this:
+ 
+@verbatim
+
+  tapper-testrun new --hostname=bullock \
+                     --precondition=4 \
+                     --precondition=5 \
+                     --test_program=whatever \
+                     --owner=mhentsc3
+ 
+@end verbatim
+
+Please note: There is a more central approach to describe all needed
+preconditions at once, see @ref{Macro Preconditions} and @ref{A real
+live example - kernel boot test}.
+
+When the requested testrun is scheduled Tapper will setup the system
+you requested and execute your defined testrun. When everything went
+well, you'll see test output soon after. For more information on what
+is going on with Tapper, see @code{/var/log/tapper-debug}.
