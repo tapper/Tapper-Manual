@@ -1,0 +1,60 @@
+*Examples for Tapper frontend commands*
+
+=head1 Create and bind a queue dedicated to a host
+
+We want to use a host "calcium" dedicated for several testruns.
+
+For this we create a dedicated queue that we schedule our testruns in
+and bind that queue to the host "calcium".
+
+=head2 Check host "calcium"
+
+  $ tapper-testrun listhost | grep calcium
+          16 | calcium
+
+So we know ID is 16.
+
+=head2 What runs currently on "Calcium"
+
+  $ tapper-testrun listhost --name calcium
+  16 | calcium |      active |    testrun 49028 |                kvm | xen-3.4-testing-64 | xen-4.0-testing-64 |    xen-unstable-64 |      kernel_reboot |  Kernel-benchmarks |        kernel_osrc |        autoinstall
+
+=head2 Create dedicated queue "slbench-perl"
+
+Show existing viewes to get overview af existing queues:
+
+  $ tapper-testrun listqueue
+
+Create new queue:
+
+  $ tapper-testrun newqueue --name slbench-perl --priority 300
+
+Activate queue:
+
+  $ tapper-testrun updatequeue --name slbench-perl --active
+
+=head2 Bind queue to host
+
+We want to connect the queue "slbench-perl" to the host "calcium".
+
+Host binding is a property of the Host.
+
+With this command we delete all existing bound queues (delqueue with
+empty list) and bind it to the wanted queue (delqueue happens before
+addqueue):
+
+  $ tapper-testrun updatehost --id 16 --delqueue="" --addqueue slbench-perl
+  16 | calcium | active | in use | slbench-perl
+
+=head2 If urgent we free host from currently running testrun
+
+You can either wait until currently running workload finishes, or you
+can hardly finish it:
+
+  $ tapper-testrun updatehost --id 16 --free
+
+Check that it is free:
+
+  $ tapper-testrun listhost --name calcium
+  16 | calcium |      active |             free | slbench-perl
+
