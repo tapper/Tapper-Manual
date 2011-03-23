@@ -1,7 +1,7 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
 @setfilename tapper-manual.info
-@settitle TAPPER User Manual
+@settitle Tapper User Manual
 @afourpaper
 @setchapternewpage odd
 @c %**end of header
@@ -12,7 +12,7 @@
 @c M-x texinfo-every-node-update
 
 @ifinfo
-This file documents the TAPPER Test and Automation Infrastructure
+This file documents the Tapper Test and Automation Infrastructure
 
 Copyright 2008-2011 AMD Operating System Research Center
 
@@ -23,7 +23,7 @@ Copyright 2008-2011 AMD Operating System Research Center
 
 @titlepage
 
-@title TAPPER
+@title Tapper
 @subtitle Test and Automation Infrastructure
 @subtitle User Manual
 @author Steffen Schwigon, Maik Hentsche
@@ -38,9 +38,9 @@ Copyright @copyright{} 2008-2011 AMD Operating System Research Center
 @node Top, Synopsis, (dir), (dir)
 
 @ifinfo
-This document describes the TAPPER Test and Automation Infrastructure
+This document describes the Tapper Test and Automation Infrastructure
 
-This document applies to version 3 of TAPPER.
+This document applies to version 3 of Tapper.
 
 @end ifinfo
 

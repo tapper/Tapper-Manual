@@ -286,9 +286,9 @@ section markers with lazy plans'' and ``TAP archives'' below for
 explicitely providing other TAP section delimiters.
 
 Please remember: @strong{Concatenating several sections into one big
-block of TAP is an TAPPER extension. To interact with other TAP
+block of TAP is an Tapper extension. To interact with other TAP
 toolchains you should try to use ``TAP archives'' when submitting
-sections into TAPPER.}
+sections into Tapper.}
 
 @strong{Example:}
 
@@ -457,12 +457,12 @@ The resulting meta information hierarchy looks like this.
 @subsection Explicit section markers with lazy plans
 
 In TAP it is allowed to print the plan (1..n) after the test lines (a
-``lazy plan'').  In our TAPPER environment with concatenated sections
+``lazy plan'').  In our Tapper environment with concatenated sections
 this would break the default section splitting which uses the plan to
 recognize a section start.
 
 If you want to use such a ``lazy plan'' in your report you can print
-an TAPPER header @code{Tapper-explicit-section-start} to explictely
+an Tapper header @code{Tapper-explicit-section-start} to explictely
 start a section. Everything until the next header
 @code{Tapper-explicit-section-start} is building one section. This
 also means that if you used this header @strong{once} in a report you
@@ -494,7 +494,7 @@ with ``lazy plans'' make a report hard to read.
 @end verbatim
 
 Please note again: @strong{The sectioning in general and this
-auxiliary header for marking sections is an TAPPER extension, not
+auxiliary header for marking sections is an Tapper extension, not
 standard TAP. An alternative way better than fiddling with this
 sectioning is to produce TAP archives and submit them instead. See
 chapter ``TAP Archives''.}
@@ -528,7 +528,7 @@ execute TAP emitting tests and evaluate statistics is @code{prove}.
 @end itemize
 @end itemize
 
-It helps to not rely on TAPPER extensions (like report sections) when
+It helps to not rely on Tapper extensions (like report sections) when
 using the @code{prove} command.
 
 @node TAP tips,  , Developing with TAP, Tutorial
@@ -536,7 +536,6 @@ using the @code{prove} command.
 
 @itemize
 @item TAP is easy to produce but using it @strong{usefully} can be a challenge.
-@item Think ``TAPPER'' -- l'Art `emis -- ``The art to emit''.
 @item Use @strong{invariable} test descriptions.
 @item Put meta information in diagnostics lines, @strong{not} into test descriptions.
 @item Use the description after @code{# TODO/SKIP}.
@@ -586,7 +585,7 @@ automation layer.
 @subsubsection Report grouping by arbitrary idenitifier
 
 If the grouping id is not a testrun id, e.g., because you have set up
-a Xen environment without the TAPPER automation layer, then generate
+a Xen environment without the Tapper automation layer, then generate
 one random value once in dom0 by yourself and use that same value
 inside all guests with the following header:
 

@@ -171,16 +171,20 @@ We describe preconditions in YAML files (@url{http://www.yaml.org/}).
 
 All preconditions have at least a key
 
+@example
 @verbatim
 precondition_type: TYPE
 @end verbatim
+@end example
 
 and optionally
 
+@example
 @verbatim
 name: VERBOSE DESCRIPTION
 shortname: SHORT DESCRIPTION
 @end verbatim
+@end example
 
 then the remaining keys depend on the TYPE.
 
@@ -188,15 +192,18 @@ then the remaining keys depend on the TYPE.
 
 stop run after system installer
 
+@example
 @verbatim
 ---
 precondition_type: installer_stop
 @end verbatim
+@end example
 
 @subsection grub
 
 overwrite automatically generated grub config
 
+@example
 @verbatim
 ---
 precondition_type: grub
@@ -205,10 +212,13 @@ config: |
     root $grubroot
     kernel /boot/vmlinuz root=$root"
 @end verbatim
+@end example
 
 @itemize
 
-@item Note: multiple lines in the grub file have to be given as one line separated by C<\n> in YAML
+@item Note: multiple lines in the grub file have to be given as one
+line separated by ``\n'' (literally a backslash and the letter n) in
+YAML
 
 @item the variables $grubroot and $root are substituted with grub and /dev/* notation of the root partition respectively
 
@@ -216,17 +226,20 @@ config: |
 
 @item since grub always expects parentheses around the device, they are part of the substitution string for $grubroot
 
-@item note the syntax, to get multiline strings in YAML you need to start them with | and a newline
+@item note the syntax, to get multiline strings in YAML you need to
+start them with |, a newline and some indentation
 
 @end itemize
 
 @subsection package
 
+@example
 @verbatim
 ---
 precondition_type: package
 filename: /data/tapper/live/repository/packages/linux/linux-2.6.27.7.tar.bz2
 @end verbatim
+@end example
 
 @itemize
 
@@ -247,6 +260,7 @@ filename: /data/tapper/live/repository/packages/linux/linux-2.6.27.7.tar.bz2
 
 a file that just needs to be scp or copied:
 
+@example
 @verbatim
 ---
 precondition_type: copyfile
@@ -254,6 +268,7 @@ protocol: nfs
 source: osko:/export/image_files/official_testing/README
 dest: /usr/local/share/tapper/
 @end verbatim
+@end example
 
 @itemize
 
@@ -273,17 +288,20 @@ dest: /usr/local/share/tapper/
 
 a line to add to /etc/fstab, e.g., to enable mounts once the system boots
 
+@example
 @verbatim
 ---
 precondition_type: fstab
 line: "165.204.85.14:/vol/osrc_vol0 /home nfs auto,defaults 0 0"
 @end verbatim
+@end example
 
 @subsection image
 
 usually the root image that is unpacked to a partition
 (this is in contrast to a guest file that's just there)
 
+@example
 @verbatim
 ---
 precondition_type: image
@@ -291,6 +309,7 @@ mount: /
 partition: testing
 image: /data/tapper/live/repository/images/rhel-5.2-rc2-32bit.tgz
 @end verbatim
+@end example
 
 @itemize
 
@@ -318,6 +337,7 @@ If not given, then it re-uses the partition without formatting/unpacking it.
 
 @subsection repository
 
+@example
 @verbatim
 ---
 precondition_type: repository
@@ -326,6 +346,7 @@ url: git://git.kernel.org/pub/scm/linux/kernel/git/avi/kvm.git
 target: kvm
 revision: c192a1e274b71daea4e6dd327d8a33e8539ed937
 @end verbatim
+@end example
 
 @itemize
 
@@ -348,6 +369,7 @@ tests.
 Creates config for PRC. This config controls what is to be run and
 started when the machine boots.
 
+@example
 @verbatim
 precondition_type: prc
 config:
@@ -359,6 +381,7 @@ config:
       - svm:  /xen/images/..../bar.svm
       - exec: /xen/images/..../start_a_kvm_guest.sh
 @end verbatim
+@end example
 
 @itemize
 
@@ -391,6 +414,7 @@ or an executable for KVM.
 
 Defines which program to run at the installation phase.
 
+@example
 @verbatim
 precondition_type: exec
 filename: /bin/some_script.sh
@@ -399,6 +423,7 @@ options:
   - --foo
   - --bar="hot stuff"
 @end verbatim
+@end example
 
 The quotes in this example are actually wrong but left in so you learn
 the following lesson:
@@ -406,17 +431,21 @@ the following lesson:
 @subsection type: hint
 
 Such a precondition provides hints where normal behaviour needs to be
-changd. It contains any hash keys needed for the special handling. The
+changed. It contains any hash keys needed for the special handling. The
 special handling itself is done in the MCP and needs to be prepared
 for what you specify here. 
 
 We currently use it to handle SimNow testing.
 
+@example
+@example
 @verbatim
 precondition_type: hint
 simnow: 1
 script: family10_sles10_xen.simnow
 @end verbatim
+@end example
+@end example
 
 @subsection quote subtleties
 
@@ -428,32 +457,44 @@ Please note some subtlety about quotes.
 
 So this
 
+@example
+@example
 @verbatim
 precondition_type: exec
 filename: /bin/some_script.sh
 options:
   - --foo
 @end verbatim
+@end example
+@end example
 
 and this
 
+@example
+@example
 @verbatim
 precondition_type: exec
 filename: /bin/some_script.sh
 options:
   - "--foo"
 @end verbatim
+@end example
+@end example
 
 are actually the same (the value is always: @code{--foo}) because
 quotes at the beginning and end of a YAML line are used by YAML. When
 you use quotes at other places like in
 
+@example
+@example
 @verbatim
 precondition_type: exec
 filename: /bin/some_script.sh
 options:
   - --bar="hot stuff"
 @end verbatim
+@end example
+@end example
 
 then they are not part of the YAML line but part of the value, so this
 time the value is: @code{--bar="hot stuff"}.
@@ -473,6 +514,7 @@ usually @strong{not} what you want.
 
 This is good enough:
 
+@example
 @verbatim
 precondition_type: exec
 filename: /bin/some_script.sh
@@ -481,6 +523,7 @@ options:
   - --foo
   - --bar=hot stuff
 @end verbatim
+@end example
 
 @end itemize
 
@@ -491,10 +534,12 @@ Requests a reboot test and states how often to reboot.
 @strong{Note:} Reboot count of 1 actually means boot two times since
 the first boot is always counted as number 0.
 
+@example
 @verbatim
 precondition_type: reboot
 count: 2
 @end verbatim
+@end example
 
 @subsection type: autoinstall
 
@@ -504,11 +549,13 @@ path or relative to /data/tapper/.../repository/install_grub/. The
 optional timeout is measured in second. If its absent a default value
 is used.
 
+@example
 @verbatim
 precondition_type: autoinstall
 filename: suse/SLES10SP3_x86_64.lst
 timeout: 1800
 @end verbatim
+@end example
 
 @subsection type: testprogram
 
@@ -517,6 +564,7 @@ should be prefered to using the @strong{PRC} type precondition. Only the
 @strong{testprogram} precondition guarantees parsing that sets all
 internal Tapper variables correctly.
 
+@example
 @verbatim
 precondition_type: testprogram
 runtime: 30
@@ -525,27 +573,35 @@ timeout: 90
 parameters:
 - --verbose
 @end verbatim
+@end example
 
 
 @subsection type: virt
 
 A virtualization environment.
 
+(The linebreaks with \ are not part of the actual file, but only for
+this document.)
+
+@example
 @verbatim
-name: automatically generated Xen test
 precondition_type: virt
+name: automatically generated Xen test
 host:
   preconditions:
-  - filename: /data/tapper/live/repository/packages/xen/builds/x86_64/xen-3.3-testing/xen-3.3-testing.2009-03-20.18614_f54cf790ffc7.x86_64.tgz
-    precondition_type: package
-  - filename: /data/tapper/live/repository/packages/tapperutils/sles10/xen_installer_suse.tar.gz
-    precondition_type: package
-  - filename: /bin/xen_installer_suse.pl
-    precondition_type: exec
+  - precondition_type: package
+    filename: /data/tapper/live/repository/packages/xen/builds/\
+              x86_64/xen-3.3-testing/\
+              xen-3.3-testing.2009-03-20.18614_f54cf790ffc7.x86_64.tgz
+  - precondition_type: package
+    filename: /data/tapper/live/repository/packages/tapperutils/\
+              sles10/xen_installer_suse.tar.gz
+  - precondition_type: exec
+    filename: /bin/xen_installer_suse.pl
   root:
     precondition_type: image
     partition: testing
-    image: /data/tapper/live/repository/images/suse/suse_sles10_64b_smp_raw.tar.gz
+    image: suse/suse_sles10_64b_smp_raw.tar.gz
     mount: /
     arch: linux64
   testprogram:
@@ -555,14 +611,16 @@ guests:
 - config:
     precondition_type: copyfile
     protocol: nfs
-    name: tapper:/data/tapper/live/repository/configs/xen/001-sandschaki-1237993266.svm
+    name: tapper:/data/tapper/live/repository/configs/\
+                 xen/001-sandschaki-1237993266.svm
     dest: /xen/images/
     svm: /xen/images/001-sandschaki-1237993266.svm
   root:
     precondition_type: copyfile
     protocol: nfs
     arch: linux64
-    name: osko:/export/image_files/official_testing/redhat_rhel4u7_64b_up_qcow.img
+    name: osko:/export/image_files/official_testing/\
+          redhat_rhel4u7_64b_up_qcow.img
     dest: /xen/images/
     mountfile: /xen/images/001-sandschaki-1237993266.img
     mounttype: raw
@@ -570,6 +628,7 @@ guests:
     execname: /opt/tapper/bin/py_ltp
     timeout_after_testprogram: 10800
 @end verbatim
+@end example
 
 @itemize
 
@@ -600,16 +659,24 @@ American English (virtualization) is expected
 These 2 options are possible in each precondition. With that you can
 execute the precondition inside guest images:
 
+@example
 @verbatim
 mountfile: ...
 mountpartition: ...
 mounttype: @TODO{is this the same as mountfile, mountpartition?}
 @end verbatim
+@end example
 
-- 1. only mountfile: eg. rawimage, file loop-mounted
-- 2. only mountpartition: then mount that partition
-- 3. image file with partitions: mount the imagefile and from that only the given partition
+@itemize
 
+@item 1. only mountfile: eg. rawimage, file loop-mounted
+
+@item 2. only mountpartition: then mount that partition
+
+@item 3. image file with partitions: mount the imagefile and from that
+only the given partition
+
+@end itemize
 
 @menu
 * Macro Preconditions::         
@@ -644,22 +711,26 @@ fields can be named after a comment field in the first lines of the
 file after the keys @code{tapper-mandatory-fields} and
 @code{tapper-optional-fields} respectively as in the following example:
 
+@example
 @verbatim
 # tapper-mandatory-fields: id
 # tapper-optional-fields: kernel
 @end verbatim
+@end example
 
 These @code{# tapper-*} headers are also used in web frontend to
 render forms out of it and submit testruns from there.
 
 The values for the placeholders can be filled via such a command line:
 
+@example
 @verbatim
- $ tapper-testrun new [all usual options] \
-      --macroprecond=FILENAME \
-       -Did=value1 \
-       -Dkernel=2.6.37
+$ tapper-testrun new [all usual options] \
+     --macroprecond=FILENAME \
+      -Did=value1 \
+      -Dkernel=2.6.37
 @end verbatim
+@end example
 
 The FILENAME is a complete filename with absolute path.
 
@@ -667,9 +738,11 @@ There is no restriction on TemplateToolkit code for variable
 substitution. The following example could be used to generate a
 default value for the precondition key id.
 
+@example
 @verbatim
-[% id = BLOCK %][% IF id %][% id %][%ELSE%]2009-06-29-perfmon[% END %][% END %]
+[%id = BLOCK%][%IF id%][%id%][%ELSE%]2009-06-29-perfmon[%END%][%END%]
 @end verbatim
+@end example
 
 @menu
 * A real live example - kernel boot test::  
@@ -682,15 +755,16 @@ default value for the precondition key id.
 
 @item Macroprecondition
 
+@example
 @verbatim
 # tapper-mandatory-fields: kernel_version
 # tapper-optional-fields: kernelpkg
 ---
+precondition_type: image
 arch: linux64
 image: suse/suse_sles10_64b_smp_raw.tar.gz
 mount: /
 partition: testing
-precondition_type: image
 ---
 precondition_type: copyfile
 name: /data/tapper/live/repository/testprograms/uname_tap/uname_tap.sh
@@ -721,6 +795,7 @@ config:
       test_program: /bin/uname_tap.sh
       timeout_testprogram: 90
 @end verbatim
+@end example
 
 
 @item The test script
@@ -728,6 +803,7 @@ config:
 The test script @code{uname_tap.sh} to which the macro precondition
 refers is just a shell script that examines uname output:
 
+@example
 @verbatim
 #! /bin/sh
 echo "1..2"
@@ -741,12 +817,14 @@ echo "ok - We run on Linux"
 if uname -a | grep -vq x86_64 ; then echo -n "not " ; fi
 echo "ok - Looks like x86_64"
 @end verbatim
+@end example
 
 @item Command line
 
 Once you wrote the macro precondition and the test script all you need
 is this command line:
 
+@example
 @verbatim
 tapper-testrun new \
   --hostname=dickstone \
@@ -755,9 +833,11 @@ tapper-testrun new \
    -Dkernelpkg=perfmon-682-x86_64.tar.gz \
    -Dkernel_version=2.6.28-rc3
 @end verbatim
+@end example
 
 or with some more information (owner, topic):
 
+@example
 @verbatim
 tapper-testrun new \
   --owner=mhentsc3 \
@@ -768,6 +848,7 @@ tapper-testrun new \
    -Dkernelpkg=perfmon-682-x86_64.tar.gz \
    -Dkernel_version=2.6.28-rc3
 @end verbatim
+@end example
 
 @end itemize
 
@@ -802,10 +883,12 @@ package into your test. This can be achieved with the existing
 with a certain filename you should assign the following precondition
 to your testrun.
 
+@example
 @verbatim
 precontition_type: producer
 producer: Kernel
 @end verbatim
+@end example
 
 This precondition will be substituted with a package precondition that
 has the latest Sysint kernel build set as filename.
@@ -887,6 +970,7 @@ Use stable kernels when true
 The lazy precondition, pointing to the ``Kernel'' precondition
 producer:
 
+@example
 @verbatim
 precondition_type: produce
 producer: Kernel
@@ -894,19 +978,22 @@ arch: i686
 version: 2.6.32
 stable: 1
 @end verbatim
+@end example
 
 @subsubsection Resulting preconditions
 
 The resulting preconditions may look like this:
 
+@example
 @verbatim
 ---
-filename: kernel/stable/i686/kernel-2.6.32-rc1.tar.gz
 precondition_type: package
+filename: kernel/stable/i686/kernel-2.6.32-rc1.tar.gz
 ---
+precondition_type: exec
 filename: /bin/gen_initrd.sh
 options:
   - 2.6.32-rc1
-precondition_type: exec
 @end verbatim
+@end example
 

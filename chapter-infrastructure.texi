@@ -131,7 +131,7 @@ configured as such:
  $ sudo ln -s /var/lib/tftpboot /tftpboot
 @end verbatim
 
-@item Create symlinks to point TFTP dir into TAPPER working dir
+@item Create symlinks to point TFTP dir into Tapper working dir
 
 The TFTP daemon only serves files from @samp{/tftpboot}, as seen above
 in the DHCP config. To supply files from the Tapper working dir make

@@ -1,19 +1,21 @@
 @node Synopsis, Technical Infrastructure, Top, Top
 @chapter Synopsis
 @menu
-* TAPPER infrastructure::      
+* Tapper infrastructure::      
 * Vocabulary::                  
 @end menu
 
 
-@node TAPPER infrastructure, Vocabulary, Synopsis, Synopsis
-@section TAPPER infrastructure
+@node Tapper infrastructure, Vocabulary, Synopsis, Synopsis
+@section Tapper infrastructure
 
-TAPPER is an infrastructure. 
+Tapper is an infrastructure. 
 
 It consists of applications, tools and protocols for testing software
-and evaluating the results. One main focus is on testing Operating
-Systems in virtualization environments.
+and evaluating the results. One initial main focus was on testing
+Operating Systems in virtualization environments. It is now a modular
+infrastructure for lots of other, related scenarios, like benchmarking
+or build systems.
 
 There are 3 important layers:
 
@@ -63,7 +65,7 @@ To fully exploit the system you need to learn:
 
 @end itemize
 
-@node Vocabulary,  , TAPPER infrastructure, Synopsis
+@node Vocabulary,  , Tapper infrastructure, Synopsis
 @section Vocabulary
 
 
