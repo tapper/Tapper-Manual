@@ -30,14 +30,13 @@ there, else they print to STDOUT.
 
 @section Available test suite wrappers
 
-Originally we had a lot of direct wrappers available but do not
-publish all. For OS testing the most important wrapper which is also
-publicly available is @emph{tapper-testsuite-autotest}
+Originally we have a lot of direct wrappers available but haven't them
+all published as open source. For OS testing the most important
+wrapper which is also publicly available is
+@emph{tapper-testsuite-autotest}
 aka. @emph{Tapper-Testsuite-AutoTest}. You should look at that.
 
 @subsection tapper-testsuite-autotest
-
-@item tapper-testsuite-autotest
 
 A suite that wraps the @emph{autotest} client with the export of TAP
 and sends the resulting TAP archives to Tapper server.

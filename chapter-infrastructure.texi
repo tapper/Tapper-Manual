@@ -199,8 +199,6 @@ export PYTHONPATH=$PYTHONPATH:/opt/tapper/python/temare/src
                                              $bitness
 @end verbatim
 
-@end itemize
-
 @item Add the Tapper ssh key to your image.
 
 @verbatim
