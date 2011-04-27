@@ -286,7 +286,7 @@ section markers with lazy plans'' and ``TAP archives'' below for
 explicitely providing other TAP section delimiters.
 
 Please remember: @strong{Concatenating several sections into one big
-block of TAP is an Tapper extension. To interact with other TAP
+block of TAP is a Tapper extension. To interact with other TAP
 toolchains you should try to use ``TAP archives'' when submitting
 sections into Tapper.}
 
@@ -494,7 +494,7 @@ with ``lazy plans'' make a report hard to read.
 @end verbatim
 
 Please note again: @strong{The sectioning in general and this
-auxiliary header for marking sections is an Tapper extension, not
+auxiliary header for marking sections is a Tapper extension, not
 standard TAP. An alternative way better than fiddling with this
 sectioning is to produce TAP archives and submit them instead. See
 chapter ``TAP Archives''.}

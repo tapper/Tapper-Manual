@@ -290,7 +290,7 @@ need to stuff them into the database. Fortunatelly there are
 commandline tools to help you with this job. They can be found at
 @code{/opt/tapper/perl/perls/current/bin}. In our production
 environment the server for Tapper is @code{tapper}. Log in to this
-server (as use @code{tapper}). Make sure that
+server (as user @code{tapper}). Make sure that
 @code{/opt/tapper/perl/perls/current/bin/} is at the beginning of your
 @code{$PATH} (so the correct perl will always be found). For each
 precondition you want to put into the database you need to define a
