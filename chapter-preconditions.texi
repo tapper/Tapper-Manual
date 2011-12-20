@@ -571,6 +571,11 @@ should be prefered to using the @strong{PRC} type precondition. Only the
 @strong{testprogram} precondition guarantees parsing that sets all
 internal Tapper variables correctly.
 
+Testprograms allow a key @code{chdir} which can either contain a
+particular directory where to chdir before testprogram execution or
+the value @code{AUTO} (uppercase) which means to chdir to the dirname
+of the program.
+
 @example
 @verbatim
 precondition_type: testprogram
@@ -687,6 +692,7 @@ only the given partition
 
 @menu
 * Macro Preconditions::         
+* Testplans::         
 @end menu
 
 @node Macro Preconditions
