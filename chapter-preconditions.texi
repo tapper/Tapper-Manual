@@ -903,7 +903,7 @@ The preconditions are then as already described in earlier chapters.
 
 It additionally allows to embed self-documentation which can be viewd
 with the command @code{tapper-testrun newtestplan --guide --file
-myfile.tp}.
+my-testplan-file}.
 
 To take parameters and create multiple testruns, you could use it like
 this:
@@ -950,7 +950,7 @@ Show self-doc:
 
 @example
 @verbatim
- $ tapper-testrun newtestplan --guide --file my-testplan.tp
+ $ tapper-testrun newtestplan --guide --file my-testplan
 
    This is an example testplan
    Allowed params:
@@ -965,7 +965,7 @@ Start a new testplan consisting of potentially many testruns:
 @example
 @verbatim
  $ tapper-testrun newtestplan --verbose \
-                  --file my-testplan.tp \
+                  --file my-testplan \
                   -Dqueue=TrackWorkload \
                   -Dtests=hackbench,dbench
 
@@ -973,8 +973,8 @@ Start a new testplan consisting of potentially many testruns:
      id:
      241
      url: http://tapper/tapper/testplan/id/241
-     path: topic/osrc/kernel/track-workload/track-workload_autoinstall
-     file: /data/tapper/[...]topic/osrc/kernel/[...]/my-testplan.tp
+     path: topic/kernel/misc/my-testplan
+     file: /data/tapper/topic/kernel/misc/my-testplan
 @end verbatim
 @end example
 
