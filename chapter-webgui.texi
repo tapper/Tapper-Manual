@@ -13,6 +13,12 @@ To evaluate reported test results in a more programmatic way, have a
 look into the @emph{DPath Query Language} that is part of the
 @ref{Reports API}.
 
+@menu
+* Usage::                       
+* Understanding Tapper Details::  
+@end menu
+
+@node Usage, Understanding Tapper Details, Web User Interface, Web User Interface
 @section Usage
 
 The main URL is typically somerthing like
@@ -22,6 +28,7 @@ The main URL is typically somerthing like
 @end example
 
 
+@node Understanding Tapper Details,  , Usage, Web User Interface
 @section Understanding Tapper Details
 
 @subsection Part 1 Overview

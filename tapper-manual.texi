@@ -6,11 +6,15 @@
 @setchapternewpage odd
 @c %**end of header
 
-@c see http://www.slac.stanford.edu/comp/unix/gnu-info/texinfo2_3.html#SEC17
+@c see http://docs.freebsd.org/info/texinfo/texinfo.info.Updating_Commands.html
 @c Emacs commands:
-@c M-x texinfo-multiple-files-update
-@c M-x texinfo-every-node-update
-
+@c  M-x texinfo-multiple-files-update
+@c  M-x texinfo-every-node-update
+@c  M-x texinfo-master-menu
+@c  M-x texinfo-update-node
+@c  M-x texinfo-make-menu
+@c  M-x texinfo-every-node-update
+@c  M-x texinfo-all-menus-update
 @ifinfo
 This file documents the Tapper Test and Automation Infrastructure
 
@@ -35,7 +39,7 @@ Copyright 2008-2011 AMD Operating System Research Center
 Copyright @copyright{} 2008-2011 AMD Operating System Research Center
 @end titlepage
 
-@node Top,  , (dir), (dir)
+@node Top, Synopsis, (dir), (dir)
 
 @ifinfo
 This document describes the Tapper Test and Automation Infrastructure

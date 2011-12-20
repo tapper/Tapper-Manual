@@ -1,5 +1,4 @@
 @node Test Suite Wrappers, Preconditions, Test Protocol, Top
-
 @chapter Test Suite Wrappers
 
 This section is about the test suites and wrappers around existing
@@ -28,6 +27,12 @@ TAPPER_REPORT_PORT
 are set the wrappers report their results by piping their TAP output
 there, else they print to STDOUT.
 
+@menu
+* Available test suite wrappers::  
+* Environment variables::       
+@end menu
+
+@node Available test suite wrappers, Environment variables, Test Suite Wrappers, Test Suite Wrappers
 @section Available test suite wrappers
 
 Originally we have a lot of direct wrappers available but haven't them
@@ -43,6 +48,7 @@ and sends the resulting TAP archives to Tapper server.
 
 That is the primary testsuite wrapper for OS testing.
 
+@node Environment variables,  , Available test suite wrappers, Test Suite Wrappers
 @section Environment variables
 
 The TAPPER automation layer provides some environment variables that

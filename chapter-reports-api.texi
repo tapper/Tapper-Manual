@@ -5,7 +5,7 @@
 * Overview::                    
 * Raw API Commands::            
 * Query language DPath::        
-* Client Utility tapper-api::  
+* Client Utility tapper-api::   
 @end menu
 
 @c ======================================================================

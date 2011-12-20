@@ -1,5 +1,4 @@
 @node Preconditions, Command line interface, Test Suite Wrappers, Top
-
 @chapter Preconditions
 
 The central thing that is needed before a test is run is a so called
@@ -14,8 +13,26 @@ A @emph{precondition} can depend on other preconditions, leading to a
 tree of preconditions that will be installed from the leaves to the
 top.
 
-@section SYNOPSIS
+@menu
+* SYNOPSIS::                    
+* Layers of preconditions::     
+* Precondition repository::     
+* Overview Precondition Types::  
+* Details Precondition Types::  
+* Macro Preconditions::         
+* Testplans::                   
+* Precondition Producers::      
+@end menu
 
+@node SYNOPSIS, Layers of preconditions, Preconditions, Preconditions
+@section SYNOPSIS
+@section Layers of preconditions
+@section Precondition repository
+@section Overview Precondition Types
+@section Details Precondition Types
+@section Macro Preconditions
+@section Testplans
+@section Precondition Producers
 @itemize
 
 @item Create a (maybe temporary) file
@@ -30,6 +47,7 @@ top.
 
 @end itemize
 
+@node Layers of preconditions, Precondition repository, SYNOPSIS, Preconditions
 @section Layers of preconditions
 
 There are ``normal preconditions'' and ``macro preconditions''.
@@ -78,6 +96,7 @@ testruns and queue them to particular hosts and queues. They are
 mostly useful to provide end-users with complex but polished frontend
 use-cases where they can define values to prepared parameters.
 
+@node Precondition repository, Overview Precondition Types, Layers of preconditions, Preconditions
 @section Precondition repository
 
 Macro preconditions can be stored in
@@ -86,7 +105,8 @@ Macro preconditions can be stored in
 /data/tapper/live/repository/macropreconditions/
 @end verbatim
 
-@section Overview: Precondition Types
+@node Overview Precondition Types, Details Precondition Types, Precondition repository, Preconditions
+@section Overview Precondition Types
 
 There are two variants of preconditions: @emph{Action preconditions}
 and @emph{Highlevel preconditions}. Action preconditions describe
@@ -172,7 +192,8 @@ a defined root image in the high level precondition is always
 installed first. All other preconditions are installed in the order
 defined by its tree structure (depth-first).
 
-@section Details: Precondition Types
+@node Details Precondition Types, Macro Preconditions, Overview Precondition Types, Preconditions
+@section Details Precondition Types
 
 We describe preconditions in YAML files (@url{http://www.yaml.org/}).
 
@@ -695,7 +716,7 @@ only the given partition
 * Testplans::         
 @end menu
 
-@node Macro Preconditions
+@node Macro Preconditions, Testplans, Details Precondition Types, Preconditions
 @section Macro Preconditions
 
 This section describes macro precondition files as they are stored in
@@ -865,7 +886,7 @@ tapper-testrun new \
 
 @end itemize
 
-@node Testplans
+@node Testplans, Precondition Producers, Macro Preconditions, Preconditions
 @section Testplans
 
 This section describes testplan files as they are stored in
@@ -995,6 +1016,7 @@ A testplan then typically contains several testruns: some for the
 known-good sanity tests without a changed feature and some for the
 actual tested feature.
 
+@node Precondition Producers,  , Testplans, Preconditions
 @section Precondition Producers
 
 Sometimes, parameters for preconditions shall be defined when the
