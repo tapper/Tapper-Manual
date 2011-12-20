@@ -71,6 +71,13 @@ they are much easier to handle.
 in the precondition repository, as only the finally resulting
 preconditions are stored in the database.
 
+@subsection Testplans
+
+Testplans are a variant of macro preconditions to control multiple
+testruns and queue them to particular hosts and queues. They are
+mostly useful to provide end-users with complex but polished frontend
+use-cases where they can define values to prepared parameters.
+
 @section Precondition repository
 
 Macro preconditions can be stored in
@@ -852,6 +859,135 @@ tapper-testrun new \
 
 @end itemize
 
+@node Testplans
+@section Testplans
+
+This section describes testplan files as they are stored in
+@code{/data/tapper/live/testplans/}.
+
+A testplan is very similar to a macro precondition but can
+additionally bundle several testruns and specify required hostname and
+used queue inside. This and the possibility of using Template-Toolkit
+(see Macro Preconditions) inside makes it most useful for frontend
+usage: You can take all parameters, especially queue+hosts from
+commandline via @code{-Dhosts=affe,zomtec,birne}, split them via
+Temaplte Toolkit and loop to create multiple testruns.
+
+To tell it's one test out of a set, we use the type
+@code{multitest}, like this:
+
+@example
+@verbatim
+---
+type: multitest
+description:
+  shortname: my-testplan
+  topic: my-testplan
+  queue: AdHoc
+  requested_hosts_all:
+  - affe
+  - zomtec
+  preconditions:
+  - ...
+  - ...
+@end verbatim
+@end example
+
+The preconditions are then as already described in earlier chapters.
+
+It additionally allows to embed self-documentation which can be viewd
+with the command @code{tapper-testrun newtestplan --guide --file
+myfile.tp}.
+
+To take parameters and create multiple testruns, you could use it like
+this:
+
+@example
+@verbatim
+### This is an example testplan
+### Allowed params:
+###  - -Dqueue=QUEUE
+###  - -Dtests=TEST1,TEST2,TEST3
+###  - -Dmachines=HOST1,HOST2
+[%# define default values %]
+[%- IF queue == '' %][% queue = 'AdHoc' %][% END -%]
+[%- IF tests == '' %][% tests = 'hackbench' %][% END -%]
+[%- IF machines == '' %][% machines = 'arges' %][% END -%]
+[% AllTests = tests.split(',') %]
+[% AllDistros = distros.split(',') %]
+[% AllMachines = machines.split(',') %]
+[%- FOREACH machine = AllMachines %]
+[%- FOREACH test = AllTests %]
+---
+type: multitest
+description:
+  shortname: [% test %]
+  topic: Topic-[% AllTests.join('-') %]
+  queue: [% queue %]
+  requested_hosts_all:
+  - [% machine %]
+  preconditions:
+  - ...
+  -
+    precondition_type: testprogram
+    program: /opt/tapper/bin/tapper-testsuite-autotest
+    parameters:
+      - --test
+      - [% test %]
+  - ...
+@end verbatim
+@end example
+
+From a command line this can be used like below.
+
+Show self-doc:
+
+@example
+@verbatim
+ $ tapper-testrun newtestplan --guide --file my-testplan.tp
+
+   This is an example testplan
+   Allowed params:
+    - -Dqueue=QUEUE
+    - -Dtests=TEST1,TEST2,TEST3
+    - -Dmachines=HOST1,HOST2
+@end verbatim
+@end example
+
+Start a new testplan consisting of potentially many testruns:
+
+@example
+@verbatim
+ $ tapper-testrun newtestplan --verbose \
+                  --file my-testplan.tp \
+                  -Dqueue=TrackWorkload \
+                  -Dtests=hackbench,dbench
+
+   Plan created
+     id:
+     241
+     url: http://tapper/tapper/testplan/id/241
+     path: topic/osrc/kernel/track-workload/track-workload_autoinstall
+     file: /data/tapper/[...]topic/osrc/kernel/[...]/my-testplan.tp
+@end verbatim
+@end example
+
+Whenever you want to provide a polished use-case to an end-user
+consider writing a testplan file. You add all the complexity, details
+and documentation into the file and provide your user with just this
+file. He/she can then specify the prepared parameters for his/her
+particular needs, like the tests to run.
+
+We additionally use Testplans to bi-directional map from such
+testplans to a task in our planning software where we simply assume a
+mapping of the task hierarchy to a subdirectory hierarchy.
+
+Based on this mapping the planning software can specify when to
+execute such a testplan according to the project plan.
+
+A testplan then typically contains several testruns: some for the
+known-good sanity tests without a changed feature and some for the
+actual tested feature.
 
 @section Precondition Producers
 
