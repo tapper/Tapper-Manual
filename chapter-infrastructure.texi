@@ -1,5 +1,4 @@
 @node Technical Infrastructure, Test Protocol, Synopsis, Top
-
 @chapter Technical Infrastructure
 
 See also the ``Getting Started Guide'' for more complete step-by-step
@@ -10,7 +9,7 @@ first example test run.
 * Adding a new host into automation::  
 @end menu
 
-@node Adding a new host into automation
+@node Adding a new host into automation,  , Technical Infrastructure, Technical Infrastructure
 @section Adding a new host into automation
 
 This chapter describes what you need to do in order to get a new
@@ -18,13 +17,14 @@ machine into the Tapper test scheduling rotation.
 
 @menu
 * Make machine remote hard resetable::  
+* Machine specific configuration::  
 * Make machine PXE boot aware::  
 * Configure TFTP on central MCP machine::  
 * Make the hosts known in the TestrunDB::  
 * Optionally enable temare to generate tests for this host::  
 @end menu
 
-@node Make machine remote hard resetable, Make machine PXE boot aware, Adding a new host into automation, Adding a new host into automation
+@node Make machine remote hard resetable, Machine specific configuration, Adding a new host into automation, Adding a new host into automation
 @subsection Make machine remote hard resetable
 
 Connect the machine physically to some facility to programmatically
@@ -59,7 +59,123 @@ If you have other hardware then write your own reset plugin
 @code{Tapper::MCP::Net::Reset::FooBar}. Look into the code of
 @code{Tapper::MCP::Net::Reset::PM211MIP} to get inspiration.
 
-@node Make machine PXE boot aware, Configure TFTP on central MCP machine, Make machine remote hard resetable, Adding a new host into automation
+@node Machine specific configuration, Make machine PXE boot aware, Make machine remote hard resetable, Adding a new host into automation
+@subsection Machine specific configuration
+
+Tapper configuration happens in @code{/etc/tapper.cfg} which contains
+everything that needs to be overwritten from the default values that
+come with the library @code{Tapper::Config}.
+
+Config entries for @code{grub} can be configured for defaults like
+this:
+
+@verbatim
+mcp:
+  installer:
+    default_grub: |
+      serial --unit=0 --speed=115200
+      terminal serial
+      default 0
+      timeout 2
+      title Test run (Install)
+        tftpserver $TAPPER_TFTPSERVER
+        kernel $TAPPER_KERNEL root=/dev/nfs reboot=force ro ip=dhcp \
+               nfsroot=$TAPPER_NFSROOT $TAPPER_OPTIONS $HOSTOPTIONS
+  test:
+    default_grub: |
+      default 0
+      timeout 2
+      title Test run (Execute)
+        root $grubroot
+        kernel /boot/vmlinuz root=$root reboot=force ip=dhcp noapic \
+               $TAPPER_OPTIONS $HOSTOPTIONS
+        $initrd_options
+@end verbatim
+
+You can see two entries, one for the installer to boot from TFTP, and
+one for the actual test run after the machine was installed. Usually
+the second part (for test run) is defined in a precondition because it
+needs special needs.
+
+In these grub entries the MCP substitutes several variables before the
+actual grub entry is written:
+
+@itemize
+
+@item @code{$grubroot}
+
+Substituted with something like @code{(hd0,1)}.
+
+@item @code{$root}
+
+Substituted with something like @code{/dev/sda2}.
+
+@item @code{$TAPPER_TFTPSERVER}
+
+Substituted with tfptserver IP address as configured in
+@code{/etc/tapper.cfg}, like:
+
+@verbatim
+tftp_server_address:     165.204.15.222
+@end verbatim
+
+@item @code{$TAPPER_KERNEL}
+
+Substituted with kernel image file as configured in
+@code{/etc/tapper.cfg}, like:
+
+@verbatim
+files:
+  # kernel for installer
+  installer_kernel: /tftpboot/bzImage
+@end verbatim
+
+@item @code{$TAPPER_NFSROOT}
+
+Substituted with NFS root filesystem as configured in
+@code{/etc/tapper.cfg}, like:
+
+@verbatim
+paths:
+   # Path to installer nfs root as set in PXE grub config
+   # (IP of central host "tapper")
+   nfsroot: 165.204.15.222:/data/tapper/live/nfsroot/
+@end verbatim
+
+@item @code{$TAPPER_OPTIONS}
+
+Substituted with something like @code{tapper_ip=165.204.15.222
+tapper_port=1337 testrun=777777 tapper_host=tapper
+tapper_environment=live} (as one single line), where ``tapper_ip'' and
+``tapper_port'' are the host and port to send status messages to, the
+``testrun'' is the testrun id of the current run, ``tapper_host'' a
+hostname alternative to ``tapper_ip'' and ``tapper_environment'' sets
+the context (``live'' or ``development'').
+
+@item @code{$HOSTOPTIONS}
+
+This substitution is controlled by another entry in
+@code{/etc/tapper.cfg}:
+
+@verbatim
+grub_completion_HOSTOPTIONS:
+  _default:
+    earlyprintk=serial,ttyS0,115200 console=ttyS0,115200
+  capalus:
+    earlyprintk=serial,ttyS4,115200 console=ttyS4,115200
+  garcia:
+    0xAFFE
+@end verbatim
+
+There you see a default value and two entries for the hosts
+``capalus'' (defining a different serial interface for console) and
+``garcia'' (defining something completely different without any
+console usage).
+
+@end itemize
+
+
+@node Make machine PXE boot aware, Configure TFTP on central MCP machine, Machine specific configuration, Adding a new host into automation
 @subsection Make machine PXE boot aware
 
 @itemize

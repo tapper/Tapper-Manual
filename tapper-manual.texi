@@ -18,7 +18,7 @@
 @ifinfo
 This file documents the Tapper Test and Automation Infrastructure
 
-Copyright 2008-2011 AMD Operating System Research Center
+Copyright 2008-2012 AMD Operating System Research Center
 
 @end ifinfo
 
