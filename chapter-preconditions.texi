@@ -167,6 +167,10 @@ Execute a script during installation phase
 
 Requests a reboot test and states how often to reboot.
 
+@item cobbler
+
+Use Cobbler to install the test system.
+
 @end table
 
 
@@ -605,6 +609,36 @@ program: /bin/uname_tap.sh
 timeout: 90
 parameters:
 - --verbose
+@end verbatim
+@end example
+
+@subsection type: autoinstall
+
+Install a system using autoinstall scripts. The filename denotes the
+grub config to be used. It is mandatory and can be given as absolut
+path or relative to /data/tapper/.../repository/install_grub/. The
+optional timeout is measured in second. If its absent a default value
+is used.
+
+@example
+@verbatim
+precondition_type: autoinstall
+filename: suse/SLES10SP3_x86_64.lst
+timeout: 1800
+@end verbatim
+@end example
+
+@subsection type: cobbler
+
+Install a system using Cobbler. The profile denotes a profile exactly
+as known by Cobbler. The timeout allows you to limit the time used for
+installation.
+
+@example
+@verbatim
+precondition_type: cobbler
+profile: ubuntu-12.04-64
+timeout: 1800
 @end verbatim
 @end example
 
