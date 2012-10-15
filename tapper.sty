@@ -1,0 +1,44 @@
+% Tapper Manual Style for LaTeX
+
+\ProvidesPackage{tapper}[2012/10/11 v0.1 Support for Tapper Manual]
+
+\usepackage[T1]{fontenc}
+%%\usepackage[latin1]{inputenc}
+\usepackage{ifthen}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{tabularx}
+%\usepackage[final]{graphicx}   % [final]/[draft]
+\usepackage[dvipdfm]{graphicx} % for use with dvipdfm
+\usepackage{makeidx}
+\usepackage{float}           % for restylefloat
+\usepackage{rotating}
+\usepackage{url}
+\usepackage{eso-pic}
+%%\usepackage{graphicx}
+
+\pagestyle{headings}
+\frenchspacing
+\makeindex
+\clubpenalty = 10000
+\widowpenalty = 10000 \displaywidowpenalty = 10000
+
+%% less toc depth
+%%\setcounter{tocdepth}{1}
+
+% place figures where it appear
+\restylefloat{figure}
+
+% no indent of paragraphs but some vspace
+\setlength{\parindent}{0pt}
+%%\setlength{\parskip}{1pt plus 2pt minus 1pt}
+
+% lax paragraph formatting but no overlength
+\sloppy
+
+%% more vertical space in arrays, e.g., tables, enumerations
+\renewcommand{\arraystretch}{1.2}
+
+% end of tapper.sty

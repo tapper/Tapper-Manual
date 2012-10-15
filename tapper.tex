@@ -1,0 +1,121 @@
+% -*- mode: latex; -*-
+
+%% main.tex
+
+%%%%##########################################################################
+
+\documentclass[11pt,a4paper,twoside,DIV15,headinclude,footexclude,headsepline]{scrartcl}
+\usepackage{tapper}
+\listfiles
+
+%%%%##########################################################################
+
+\begin{document}
+
+%%% ----------------------------------------
+%%% Colored front cover and empty back cover
+%%% ----------------------------------------
+
+\thispagestyle{empty}
+
+\vspace*{1\baselineskip}
+
+\begin{center}
+
+ {\Large
+   AMD Operating System Research Center \\
+ }
+
+ \vspace*{6\baselineskip}
+
+ \textbf{\Huge
+  Tapper \\
+  ~ \\
+  Test and Automation \\
+  Infrastructure \\
+ }
+
+ \vspace*{19\baselineskip}
+ \textbf{\Huge Manual}
+\end{center}
+
+\AddToShipoutPicture*{\put(0,153){%
+\includegraphics[width=\paperwidth,%
+                 height=\paperheight,keepaspectratio]{LOGOS/tapper-frontpage.eps}}}%
+
+\newpage
+
+\thispagestyle{empty}
+
+~
+
+\newpage
+
+%%% ------------------------------------------------------------
+%%% End front cover
+%%% ------------------------------------------------------------
+
+\thispagestyle{empty}
+
+\title{
+ \vspace*{2\baselineskip}
+ ~ \\
+ ~ \\
+ Tapper \\
+ ~ \\
+ Test and Automation \\
+ Infrastructure \\
+ ~ \\
+ Manual
+}
+\date{
+ ~ \\
+ \vspace*{8\baselineskip}
+}
+\publishers{
+ AMD Operating System Research Center \\
+ Steffen Schwigon, Maik Hentsche \\
+ Copyright 2008-2012
+}
+
+\thispagestyle{empty}
+\maketitle
+\thispagestyle{empty}
+
+
+%%%%##########################################################################
+
+\newpage
+\thispagestyle{plain}
+
+~
+
+%% \newpage
+%% \thispagestyle{plain}
+
+%% ~
+
+%%%%##########################################################################
+
+\newpage
+\thispagestyle{plain}
+
+\tableofcontents
+
+%%%%##########################################################################
+
+\newpage
+\thispagestyle{plain}
+
+~
+
+%%%%##########################################################################
+
+\newpage
+\input{article_example.tex}
+
+%%%%##########################################################################
+
+\printindex
+
+\end{document}
