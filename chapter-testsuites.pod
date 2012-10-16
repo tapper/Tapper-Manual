@@ -8,7 +8,7 @@ It's basically about the middle part in the following picture:
 =begin latex
 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{tapper_architecture_overview.png}
+\includegraphics[width=0.75\textwidth]{tapper_architecture_overview.eps}
 \end{center}
 
 =end latex
