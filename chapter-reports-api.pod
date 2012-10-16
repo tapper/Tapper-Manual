@@ -1,0 +1,325 @@
+=head1 Reports API
+
+=head2 Overview
+
+There runs yet another daemon, the so called
+C<Tapper::Reports::API>, on the same host where already the
+C<TAP Receiver> runs. This C<Reports API> is meant for
+everything that needs more than just dropping TAP reports to a port,
+e.g., some interactive dialog or parameters.
+
+This C<Tapper::Reports::API> listens on Port C<7358>. Its API
+is modeled after classic unix script look&feel with a first line
+containing a description how to interpret the rest of the lines.
+
+The first line consists of a shebang (C<#!>), a C<api command>
+and C<command parameters>. The rest of the file is the
+C<payload> for the C<api command>.
+
+The syntax of the C<command params> varies depending on the
+C<api command> to make each command intuitively useable. Sometimes
+they are just positional parameters, sometimes they look like the
+start of a HERE document (i.e., they are prefixed with C<<<> as
+you can see below).
+
+
+=head2 Raw API Commands
+
+In this section the raw API is described. That's the way you can use
+without any dependencies except for the minimum ability to talk to a
+port, e.g., via C<netcat>.
+
+See section I<Client Utility tapper-api> for how to use a dedicated command line
+utility that makes talking to the reports API easier, but is a
+dependency that might not be available in your personal test
+environment.
+
+
+=head3 upload aka. attach a file to a report
+
+This api command lets you upload files, aka. attachments, to
+reports. These files are available later through the web
+interface. Use this to attach log files, config files or console
+output.
+
+
+
+=head4 upload Synopsis
+
+  #! upload REPORTID FILENAME [ CONTENTTYPE ]
+  payload
+
+=head4 Parameters
+
+=over 4
+
+=item REPORTID
+
+The id of the report to which the file is assigned
+
+=item FILENAME
+
+The name of the file
+
+=item CONTENTTYPE
+
+Optional MIME type; defaults to C<plain>; use
+C<application/octet-stream> to make it downloadable later in
+browser.
+
+=back
+
+=head4 upload Payload
+
+The raw content of the file to upload.
+
+=head4 upload Example usage
+
+Just C<echo> the first api-command line and then immediately
+C<cat> the file content:
+
+  $ ( echo "#! upload 552 xyz.tmp" ; cat xyz.tmp ) | netcat -w1 bascha 7358
+
+=head3 download - download a file which is attached to a report
+
+This api command lets you download files, aka. attachments, from
+reports. 
+
+
+
+=head4 download Synopsis
+
+  #! upload REPORTID FILENAME
+
+There is no other payload neccessary here, just this single line.
+
+=head4 download Parameters
+
+=over 4
+
+=item REPORTID
+
+The id of the report to which the file is assigned
+
+=item FILENAME
+
+The name of the file as it was specified on upload
+
+=back
+
+=head4 download Example usage
+
+Just C<echo> the first api-command line and redirect the answer
+into a file.
+
+  $ ( echo "#! download 552 xyz.tmp" ) | netcat -w1 bascha 7358 > xyz.tmp
+
+
+=head3 mason - Render templates with embedded query language 
+
+To query report results we provide sending templates to the API in
+which you can use a query language to get report details: This
+api-command is called like the template engine so that we can provide
+other template engines as well.
+
+
+
+=head4 mason Synopsis
+
+  #! mason debug=0 <<ENDMARKER
+  payload
+  ENDMARKER
+
+=head4 mason Parameters
+
+=over 4
+
+=item debug=1
+
+If C<debug> is specified and value set to 1 then any error message
+that might occur is reported as result content. If debug is omitted or
+false and an error occurs then the result is just empty.
+
+=item <<ENDMARKER 
+
+You can choose any word instead of ENDMARKER which should mark the end
+of input, like in HERE documents, usually some word that is not
+contained in the template payload.
+
+=back
+
+=head4 mason Payload
+
+A mason template. 
+
+C<Mason> is a template language, see
+L<http://masonhq.com>. Inside the template we provide a function
+C<reportdata> to access report data via a query language. See
+section I<Query language DPath> for details about this.
+
+=head4 Example usage
+
+This is a raw Mason template:
+
+   % my $world = "Mason World";
+   Hello <% $world %>!
+   % my @res = reportdata '{ "suite.name" => "perfmon" } :: //tap/tests_planned';
+   Planned perfmon tests:
+   % foreach (@res) {
+      <% $_ %>
+   % }
+
+If you want to submit such a Mason template you can add the
+api-command line and the EOF marker like this:
+
+  $ EOFMARKER="MASONTEMPLATE".$$
+  $ payload_file="perfmon_tests_planned.mas"
+  $ ( echo "#! mason <<$EOFMARKER" ; cat $payload_file ; echo "$EOFMARKER" ) \
+      | netcat -w1 bascha 7358
+
+The output of this is the rendered template. You can extend the line
+to save the rendered result into a file:
+
+  $ ( echo "#! mason <<$EOFMARKER" ; cat $payload_file ; echo "$EOFMARKER" ) \
+      | netcat -w1 bascha 7358 > result.txt
+
+The answer for this looks like this:
+
+  Hello Mason World!
+  Planned perfmon tests:
+     3
+     4
+     17
+
+=head2 Query language DPath
+
+The query language, which is the argument to the C<reportdata> as
+used embedded in the C<mason> examples above:
+
+   reportdata '{ "suite.name" => "perfmon" } :: //tap/tests_planned'
+
+consists of 2 parts, divided by the C<::>.
+
+We call the first part in braces I<reports filter> and the second
+part I<data filter>.
+
+
+
+=head3 Reports Filter (SQL-Abstract)
+
+The I<reports filter> selects which reports to look at. The
+expression inside the braces is actually a complete
+C<SQL::Abstract> expression
+(L<http://search.cpan.org/~mstrout/SQL-Abstract/>) working
+internally as a C<select> in the context of the object relational
+mapper, which targets the table C<Report> with an active JOIN to
+the table C<Suite>.
+
+All the matching reports are then taken to build a data structure for
+each one, consisting of the table data and the parsed TAP part which
+is turned into a data structure via C<TAP::DOM>
+(L<http://search.cpan.org/~schwigon/TAP-DOM/>).
+
+The I<data filter> works then on that data structure for each
+report.
+
+
+
+=head4 SQL::Abstract expressions
+
+The filter expressions are best described by example:
+
+=over 4
+
+=item Select a report by ID
+  { 'id' => 1234 }
+
+=item Select a report by suite name
+  { 'suite_name' => 'oprofile' }
+
+=item Select a report by machine name
+  { 'machine_name' => 'bascha' }
+
+=item Select a report by date
+
+Here the value that you want to select is a structure by itself,
+consisting of the comparison operator and a time string:
+
+  { 'created_at' => { '<', '2009-04-09 10:00' }  }
+
+=back
+
+=head4 The data structure
+
+=head3 Data Filter
+
+The data structure that is created for each report can be evaluated
+using the I<data filter> part of the query language, i.e.,
+everything after the C<::>. This part is passed through to
+C<Data::DPath>
+(L<http://search.cpan.org/~schwigon/Data-DPath/>).
+
+
+
+=head4 Data-DPath expressions
+
+
+=head3 Optimizations
+
+Using the query language can be slow. The biggest slowdown occurs with
+the C<ANYWHERE> element C<//>, again with several of them,
+because they span up a big search tree.
+
+Therefore, if you know the depth of your path, try to replace the
+C<//> with some C<*> because that only spans up on the current
+step not every possible step, like this:
+
+    { ... } :: //section/stats-proc-interrupts-before//tap//data/TLB";
+
+    { ... } :: /results/*/section/stats-proc-interrupts-before/tap/lines/*/_children/*/data/TLB";
+
+
+
+
+=head2 Client Utility tapper-api
+
+There is a command line utility C<tapper-api> that helps with
+using the API without the need to talk the protocol and fiddle with
+C<netcat> by yourself.
+
+
+=head3 help
+
+You can aquire a help page to each sub command:
+
+  $ /opt/tapper/perl/bin/tapper-api help upload
+
+prints
+
+  tapper-api upload --reportid=s --file=s [ --contenttype=s ]
+     --verbose          some more informational output
+     --reportid         INT; the testrun id to change
+     --file             STRING; the file to upload, use '-' for STDIN
+     --contenttype      STRING; content-type, default 'plain', 
+                        use 'application/octed-stream' for binaries
+
+=head3 upload
+
+Use it from the Tapper path, like:
+
+  $ /opt/tapper/perl/bin/tapper-api upload \
+    --file /var/log/messages \
+    --reportid=301
+
+You can also use the special filename F<-> to read from STDIN,
+e.g., if you need to pipe the output of tools like C<dmesg>:
+
+  $ dmesg | /opt/tapper/perl/bin/tapper-api upload \
+    --file=- \
+    --filename dmesg \
+    --reportid=301
+
+=head3 mason
+
+TODO
+

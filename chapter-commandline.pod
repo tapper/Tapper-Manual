@@ -1,0 +1,173 @@
+=head1 Command line interface
+
+=head2 Commandline Synopsis
+
+=over 4
+
+=item Get host usage/scheduling overview
+
+=item Create hosts
+
+=item Create queues
+
+=item Create hosts/queue bindings
+
+=back
+
+=head2 Scheduling
+
+=head3 Create new queue and new host and bind both together
+
+=over 4
+
+=item Show existing queues with priorities
+
+    $ tapper-testrun listqueue -v
+            10 |              AdHoc |  1000
+            11 |      kernel_reboot |   100
+             4 | xen-3.3-testing-32 |   100
+             5 | xen-3.3-testing-64 |   100
+             7 | xen-3.4-testing-32 |   100
+             6 | xen-3.4-testing-64 |   100
+             9 |    xen-unstable-32 |   100
+             8 |    xen-unstable-64 |   100
+
+=item Create new queue I<oprofile>
+
+  $ tapper-testrun newqueue --name=oprofile \
+                            --priority=200
+  12
+
+=item Create new host I<bullock> and bind it to queue I<oprofile>
+
+  $ tapper-testrun newhost --name=bullock \
+                           --queue=oprofile
+  10
+
+=item Show existing hosts
+
+Note that the new host I<bullock> is initially deactivated.
+
+    $ tapper-testrun listhost -v
+             8 |  amarok | deactivated |   free
+             1 |  athene |      active | in use
+             9 |   azael | deactivated |   free
+            10 | bullock | deactivated |   free | oprofile
+             4 |    cook | deactivated |   free
+             6 | incubus | deactivated |   free
+             2 |  kobold |      active | in use
+             5 |  lemure |      active | in use
+             3 |   satyr |      active | in use
+             7 |    uruk | deactivated |   free
+
+=item Activate host I<bullock>
+
+Note that this command is ID based (bullock has id 10) because you
+can rename hosts.
+
+    $ tapper-testrun updatehost --id=10 --active
+    10 | bullock | active | free | oprofile
+
+=item Again, show existing hosts
+
+Host I<bullock> is now activated.
+
+    $ tapper-testrun listhost -v
+             8 |  amarok | deactivated |   free
+             1 |  athene |      active | in use
+             9 |   azael | deactivated |   free
+            10 | bullock |      active |   free | oprofile
+             4 |    cook | deactivated |   free
+             6 | incubus | deactivated |   free
+             2 |  kobold |      active | in use
+             5 |  lemure |      active | in use
+             3 |   satyr |      active | in use
+             7 |    uruk | deactivated |   free
+
+=back
+
+Done.
+
+=head3 Change queue priority
+
+=over 4
+
+=item List existing queues
+
+    $ tapper-testrun listqueue -v
+            10 |              AdHoc |  1000
+            11 |      kernel_reboot |   100
+            12 |           oprofile |   200 | bullock
+             4 | xen-3.3-testing-32 |   100
+             5 | xen-3.3-testing-64 |   100
+             7 | xen-3.4-testing-32 |   100
+             6 | xen-3.4-testing-64 |   100
+             9 |    xen-unstable-32 |   100
+             8 |    xen-unstable-64 |   100
+
+=item Update queue
+
+  $ tapper-testrun updatequeue --name=oprofile \
+                               --priority=1000
+  12
+
+=item Again, list existing queues
+
+    $ tapper-testrun listqueue -v
+            10 |              AdHoc |  1000
+            11 |      kernel_reboot |   100
+            12 |           oprofile |  1000 | bullock
+             4 | xen-3.3-testing-32 |   100
+             5 | xen-3.3-testing-64 |   100
+             7 | xen-3.4-testing-32 |   100
+             6 | xen-3.4-testing-64 |   100
+             9 |    xen-unstable-32 |   100
+             8 |    xen-unstable-64 |   100
+
+Done.
+
+=back
+
+=head3 requested features
+
+Hosts for testruns can be choosen based on requested
+features. Supported features are:
+
+=over 4
+
+=item hostname
+
+=item mem
+
+=item vendor
+
+=item family
+
+=item model
+
+=item stepping
+
+=item revision
+
+=item socket
+
+=item cores
+
+=item clock
+
+=item l2cache
+
+=item l3cache
+
+=back
+
+=head3 Cancel current testrun on host
+
+Freeing a host need the config for the currently running
+testrun. Thus, the command is only tested on bancroft and may not work
+on other machines.
+
+    $ tapper-testrun freehost \
+                     --name=bullock\
+                     --desc='I need this host right now'
+
