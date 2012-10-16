@@ -5,17 +5,16 @@
 
 # ::Pos1::
 
-# List of Author-IDs that provide a file "article_AUTHORID.pod"
-AUTHOR_IDS_POD =  example
-
+# List of Author-IDs that provide a file "chapter-AUTHORID.pod"
+AUTHOR_IDS_POD = commandline infrastructure preconditions reports-api synopsis tap testsuites usecases webgui
 
 # -------------------------------------------------------------------
 
 EXTRA_FILES = $(shell find . -mindepth 2 -exec echo "{}" \; | grep -v "\.svn\/" | grep -v "\.git\/" | grep -v "\/\.svn$$" | grep -v "\/\.git$$" )
 
-PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo article_$${a}.tex ; done )
+PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo chapter-$${a}.tex ; done )
 
-DIST_PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo article_$${a}.pod ; done )
+DIST_PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo chapter-$${a}.pod ; done )
 
 LOGO_FILES = LOGOS/tapper-frontpage.eps
 
@@ -164,7 +163,15 @@ $(MAIN).dvi: $(MAINFILES)
 # tex image dependencies
 
 # pod
-article_example.tex: article_example.pod
+chapter-commandline.tex: chapter-commandline.pod
+chapter-infrastructure.tex: chapter-infrastructure.pod
+chapter-preconditions.tex: chapter-preconditions.pod
+chapter-reports-api.tex: chapter-reports-api.pod
+chapter-synopsis.tex: chapter-synopsis.pod
+chapter-tap.tex: chapter-tap.pod
+chapter-testsuites.tex: chapter-testsuites.pod
+chapter-usecases.tex: chapter-usecases.pod
+chapter-webgui.tex: chapter-webgui.pod
 
 # -------------------------------------------------------------------
 # misc activities
