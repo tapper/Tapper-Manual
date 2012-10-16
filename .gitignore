@@ -1,5 +1,13 @@
+article_*.tex
+
 tapper.dvi
 tapper.pdf
+tapper.aux
+tapper.idx
+tapper.ilg
+tapper.ind
+tapper.log
+tapper.toc
 
 tapper-manual-*.*/
 tapper-manual.aux
