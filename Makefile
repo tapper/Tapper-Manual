@@ -17,7 +17,7 @@ PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo article_$${a}.tex
 
 DIST_PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo article_$${a}.pod ; done )
 
-LOGO_FILES = LOGOS/tapper.eps
+LOGO_FILES = LOGOS/tapper-frontpage.eps
 
 
 TITLE = tapper-manual
@@ -78,7 +78,7 @@ CONVERT=convert
 
 # local targets
 # ps pdf
-all-local: dvi misc
+all-local: pdf dvi misc
 	@echo ""
 	@echo "FILE OVERVIEW:"
 	@echo "  extra:" $(EXTRA_FILES)
