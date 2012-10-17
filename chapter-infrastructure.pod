@@ -16,7 +16,7 @@ switch it completely off.
 
 This can be the Reset cable wires connected to a dedicated reset box
 which can be programmed usually with an external tool. It can also be
-a TCP/IP controllable Power Control. 
+a TCP/IP controllable Power Control.
 
 As an example Tapper comes with a plugin for the ``Infratec PM211
 MIP'' ethernet controllable multi socket outlet. To use it write this
@@ -265,6 +265,26 @@ steps:
                                                $memory \
                                                $cores \
                                                $bitness
+
+=head3 Optionally: Web server for autoinstall
+
+If you want to use autoinstall (i.e. kickstart, autoyast in contrast to
+image based installation with the Tapper installer) the suggested way to
+do it is Cobbler. If you do not want to use Cobbler, Tapper also
+supports kickstart more directly using the autoinstall precondition
+type. For this precondition you need a way to get the kickstart/autoyast
+to the test machine. The suggested way is a Web server, e.g
+Apache. Adapt your Apache config with the following:
+  cat <<EOF >>/etc/apache2/conf.d/tapper.conf
+  Alias /autoinstall /data/tapper/live/configs/autoinstall
+  <Directory /data/tapper/live/configs/autoinstall>
+          Options +FollowSymLinks +Indexes
+          ForceType text/plain
+          order allow,deny
+          allow from all
+  </Directory>
+  EOF
+
 
 =item Add the Tapper ssh key to your image.
 
