@@ -14,11 +14,11 @@ There are 3 important layers:
 
 =over 4
 
-=item B<Reports Framework>
+=item * B<Reports Framework>
 
-=item B<Test Suites>
+=item * B<Test Suites>
 
-=item B<Automation System>
+=item * B<Automation System>
 
 =back
 
@@ -27,16 +27,16 @@ connected together and are targeted to be stacked in this order:
 
 =over 4
 
-=item The B<Report Framework> is for receiving and evaluating 
+=item * The B<Report Framework> is for receiving and evaluating 
 test reports sent by any source. The only requirement is that the
 result reports are using TAP, the Test Anything Protocol.
 
-=item The B<Test Suites> are either directed test suites or
+=item * The B<Test Suites> are either directed test suites or
 wrappers around existing test projects doing conversion of their
 results into TAP. These are the TAP producers that create reports and
 send them to the Reports Framework.
 
-=item The B<Automation System> is taking care of setting up
+=item * The B<Automation System> is taking care of setting up
 machines, installing dependencies and test suites and running the
 latter. It can set up virtualized environments.
 
@@ -46,15 +46,15 @@ To fully exploit the system you need to learn:
 
 =over 4 
 
-=item B<Connect and prepare a new machine into the infrastructure>
+=item * B<Connect and prepare a new machine into the infrastructure>
 
-=item B<Write tests using the Test Anything Protocol (TAP)>
+=item * B<Write tests using the Test Anything Protocol (TAP)>
 
-=item B<Write preconditions to describe automation tasks>
+=item * B<Write preconditions to describe automation tasks>
 
-=item B<Review results via Web interface>
+=item * B<Review results via Web interface>
 
-=item B<Evaluate results via Report Query interface>
+=item * B<Evaluate results via Report Query interface>
 
 =back
 

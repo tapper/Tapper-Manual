@@ -17,7 +17,7 @@ L<Reports API>.
 
 The main URL is typically somerthing like
 
-  L<http://tapper/tapper>
+  http://tapper/tapper
 
 
 =head2 Understanding Tapper Details
@@ -26,20 +26,17 @@ The main URL is typically somerthing like
 
 =over 4
 
-=item Go to L<https://tapper/tapper/reports>
+=item * Go to L<http://tapper/tapper/reports>
 
-=item Click ``Last weeks test reports'', 
-  aka. L<https://tapper/tapper/reports/date/7>
+=item * Click ``Last weeks test reports'',
+aka. L<http://tapper/tapper/reports/date/7>
 
-=item Below day ``Wed Oct 7, 2009'' find the line 
+=item * Below day ``Wed Oct 7, 2009'' find the line
 
       20856  2009-10-07  Topic-xen-unstable  satyr  PASS testrun 9617
 
-  To find this report you probably need to go more back into the past
-  than just 7 days, or you use the direct link below.
-
-=item Note that there are other reports in this group that are greyed-out,
-  i.e. all report ids of this testrun are:
+=item * Note that there are other reports in this group that are
+greyed-out, i.e. all report ids of this testrun are:
 
       20856    Topic-xen-unstable
       20855    LMBench
@@ -47,25 +44,25 @@ The main URL is typically somerthing like
       20852    Host-Overview
       20851    Hardwaredb Overview
 
-=item Note that something FAILed in the CTCS run (20854).
+=item * Note that something FAILed in the CTCS run (20854).
 
-=item What we know until here:
+=item * What we know until here:
 
 =over 4
 
-=item It is a test for Xen-unstable (Topic-xen-unstable)
+=item * It is a test for Xen-unstable (Topic-xen-unstable)
 
-=item The running of the guests+suites itself worked well (20856 PASS)
+=item * The running of the guests+suites itself worked well (20856 PASS)
 
-=item There were 2 guest runs: 
+=item * There were 2 guest runs:
 
           LMBench      satyr:celegorm                  PASS
           CTCS         satyr:eriador                   FAIL
 
 =back
 
-=item Click on the ID link ``20856''
-  aka. L<https://tapper/tapper/reports/id/20856>
+=item * Click on the ID link ``20856''
+  aka. L<http://tapper/tapper/reports/id/20856>
 
 =back
 
@@ -75,24 +72,24 @@ The main URL is typically somerthing like
 
 =over 4
 
-=item Here you see the details of this report 20856.
+=item * Here you see the details of this report 20856.
 
 You see:
 
 
 =over 4
 
-=item green PASSED results for the ``MCP overview''. 
-      This means the starting and finishing of the guests worked.
+=item * green PASSED results for the ``MCP overview''. This means the
+starting and finishing of the guests worked.
 
-=item attachments of console logs.
+=item * attachments of console logs.
 
-=item some links to more information (raw TAP report, preconditions)
+=item * some links to more information (raw TAP report, preconditions)
 
 =back
 
 
-=item Note below the group of all the other reports, again it's the group
+=item * Note below the group of all the other reports, again it's the group
   of those IDs:
 
       20856    Topic-xen-unstable
@@ -101,49 +98,49 @@ You see:
       20852    Host-Overview
       20851    Hardwaredb Overview
 
-=item The most meta information is in ``20852 Host-Overview''.
+=item * The most meta information is in ``20852 Host-Overview''.
 
-=item Click on the ID link ``20852''
-  aka. L<https://tapper/tapper/reports/id/20852>
+=item * Click on the ID link ``20852''
+  aka. L<http://tapper/tapper/reports/id/20852>
 
-=item Now you see the details of ``20852 Host-Overview'' with 
-lots of meta information as ``Context''.
+=item * Now you see the details of ``20852 Host-Overview'' with lots
+of meta information as ``Context''.
 
 You see:
 
     Metainfo
-        cpuinfo: 	1x Family: 15, Model: 67, Stepping: 2
-        ram: 	3950 MB
-        uptime: 	0 hrs
+        cpuinfo: 1x Family: 15, Model: 67, Stepping: 2
+        ram:     3950 MB
+        uptime:  0 hrs
 
     XEN-Metainfo
-        xen_dom0_kernel: 	2.6.18.8-xen x86_64
-        xen_base_os_description: 	SUSE Linux Enterprise Server 10 SP2 (x86_64)
-        xen_changeset: 	20273:10cfcbef68ee
-        xen_version: 	3.5-unstable
+        xen_dom0_kernel:         2.6.18.8-xen x86_64
+        xen_base_os_description: SUSE Linux Enterprise Server 10 SP2 (x86_64)
+        xen_changeset:           20273:10cfcbef68ee
+        xen_version:             3.5-unstable
 
     guest_1_redhat_rhel5u4_32bpae_qcow
-        xen_guest_description: 	001-lmbench
-        xen_guest_flags: 	...
-        xen_guest_start: 	...
+        xen_guest_description:  001-lmbench
+        xen_guest_flags:        ...
+        xen_guest_start:        ...
 
     guest_2_suse_sles10_sp3_gmc_32b_up_qcow
-        xen_guest_description: 	002-ctcs
-        xen_guest_flags: 	...
-        xen_guest_start: 	...
+        xen_guest_description:  002-ctcs
+        xen_guest_flags:        ...
+        xen_guest_start:        ...
 
 
-=item If you are interested in what went wrong in the CTCS run, 
+=item * If you are interested in what went wrong in the CTCS run, 
   click on ID link ``20854''
-  aka. L<https://tapper/tapper/reports/id/20854>
+  aka. L<http://tapper/tapper/reports/id/20854>
 
-=item Here you see 
+=item * Here you see 
 
 =over 4
 
-=item one RED bar in CTCS-results
+=item * one RED bar in CTCS-results
 
-=item several RED bars in var_log_messages
+=item * several RED bars in var_log_messages
 
 =back
 
@@ -156,17 +153,17 @@ You can click on them to unfold the details.
 
 =over 4
 
-=item Imagine that the testrun completely failed and no usable reports
+=item * Imagine that the testrun completely failed and no usable reports
   arrived in, except that primary one from the MCP, then you can use the
   link at the end of the line
 
       20856  2009-10-07  Topic-xen-unstable  satyr  PASS testrun 9617
                                                          ------------ 
 
-=item Click on that link ``testrun 9617''
-  aka. L<https://tapper/tapper/testruns/id/9617>
+=item * Click on that link ``testrun 9617''
+  aka. L<http://tapper/tapper/testruns/id/9617>
 
-=item That contains the description what was B<planned> 
+=item * That contains the description what was B<planned> 
 in this testrun, regardless of whether it succeeded.
 
 (That's the main difference between the two complementary concepts
@@ -190,6 +187,6 @@ You see:
         Test              py_ctcs
 
 
-=item That's it, basically.
+=item * That's it, basically.
 
 =back

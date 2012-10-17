@@ -31,15 +31,15 @@ top.
 
 =over 4
 
-=item Create a (maybe temporary) file
+=item * Create a (maybe temporary) file
 
-=item Define conditions for a testrun: the C<preconditions>
+=item * Define conditions for a testrun: the C<preconditions>
 
-=item Put the precondition into the database, maybe referring to other preconditions
+=item * Put the precondition into the database, maybe referring to other preconditions
 
-=item Create a testrun in the database, referring to the precondition
+=item * Create a testrun in the database, referring to the precondition
 
-=item Wait until the testrun is executed and results are reported
+=item * Wait until the testrun is executed and results are reported
 
 =back
 
@@ -118,48 +118,48 @@ The following I<action> precondition types are allowed:
 
 =over 4
 
-=item package
+=item * package
 
 A package (kernel, library, etc.), of type I<.tar>, I<.tar.gz> or I<.tar.bz2>
 
-=item image
+=item * image
 
 A complete OS image of type I<.iso>, I<.tar.gz>, I<.tgz>,
 I<.tar>, I<.tar.bz2>
 
-=item prc
+=item * prc
 
 Create a config for the I<PRC> module of the automation layer.
 
-=item copyfile
+=item * copyfile
 
 One file that can just be copied/rsync'd
 
-=item installer_stop
+=item * installer_stop
 
 Don't reboot machine after system installer finished
 
-=item grub
+=item * grub
 
 Overwrite automatically generated grub config with one provided by the tester
 
-=item fstab
+=item * fstab
 
 Append a line to /etc/fstab
 
-=item repository
+=item * repository
 
 Fetch data from a git, hg or svn repository
 
-=item exec
+=item * exec
 
 Execute a script during installation phase
 
-=item reboot
+=item * reboot
 
 Requests a reboot test and states how often to reboot.
 
-=item cobbler
+=item * cobbler
 
 Use Cobbler to install the test system.
 
@@ -173,7 +173,7 @@ allowed:
 
 =over 4
 
-=item virt
+=item * virt
 
 Generic description for Xen or KVM
 
@@ -223,17 +223,17 @@ overwrite automatically generated grub config
 
 =over 4
 
-=item Note: multiple lines in the grub file have to be given as one
+=item * Note: multiple lines in the grub file have to be given as one
 line separated by ``\n'' (literally a backslash and the letter n) in
 YAML
 
-=item the variables $grubroot and $root are substituted with grub and /dev/* notation of the root partition respectively
+=item * the variables $grubroot and $root are substituted with grub and /dev/* notation of the root partition respectively
 
-=item $root substitution uses the notation of the installer kernel. This may cause issues when the installer detects /dev/sd? and the kernel under test detects /dev/hd? or vice versa
+=item * $root substitution uses the notation of the installer kernel. This may cause issues when the installer detects /dev/sd? and the kernel under test detects /dev/hd? or vice versa
 
-=item since grub always expects parentheses around the device, they are part of the substitution string for $grubroot
+=item * since grub always expects parentheses around the device, they are part of the substitution string for $grubroot
 
-=item note the syntax, to get multiline strings in YAML you need to
+=item * note the syntax, to get multiline strings in YAML you need to
 start them with |, a newline and some indentation
 
 =back
@@ -246,16 +246,16 @@ start them with |, a newline and some indentation
 
 =over 4
 
-=item path names can be absolut or relative to
+=item * path names can be absolut or relative to
  /data/tapper/development/repository/packages/
 
-=item supported packages types are rpm, deb, tar, tar.gz and tar.bz2
+=item * supported packages types are rpm, deb, tar, tar.gz and tar.bz2
 
-=item package type is detected automatically
+=item * package type is detected automatically
 
-=item absolute path: usually /data/tapper/...
+=item * absolute path: usually /data/tapper/...
 
-=item relative path: relative to /data/tapper/(live|development)/
+=item * relative path: relative to /data/tapper/(live|development)/
 
 =back
 
@@ -271,15 +271,15 @@ a file that just needs to be scp or copied:
 
 =over 4
 
-=item supported protocols are ``scp'', ``nfs'' and ``local''
+=item * supported protocols are ``scp'', ``nfs'' and ``local''
 
-=item the part before the first colon in the unique name is used as server name
+=item * the part before the first colon in the unique name is used as server name
 
-=item the server name part is ignored for local
+=item * the server name part is ignored for local
 
-=item if dest ends in a slash, the file is copied with its basename preserved into the denoted directory
+=item * if dest ends in a slash, the file is copied with its basename preserved into the denoted directory
 
-=item whether the ``dest'' is interpreted as a directory or a file is decided by the underlying ``scp'' or ``cp'' semantics, i.e., it depends on whether a directory already exists.
+=item * whether the ``dest'' is interpreted as a directory or a file is decided by the underlying ``scp'' or ``cp'' semantics, i.e., it depends on whether a directory already exists.
 
 =back
 
@@ -304,25 +304,25 @@ usually the root image that is unpacked to a partition
 
 =over 4
 
-=item partition and mount are required, all other options are optional
+=item * partition and mount are required, all other options are optional
 
-=item mount points are interpreted as seen inside the future installed system
+=item * mount points are interpreted as seen inside the future installed system
 
-=item if no image is given, the already installed one is reused, i.e., only the mountpoint is mounted; make sure this is possible or your test will fail!
+=item * if no image is given, the already installed one is reused, i.e., only the mountpoint is mounted; make sure this is possible or your test will fail!
 
-=item can be either an iso file which is copied with dd or a tar, tar.gz or
+=item * can be either an iso file which is copied with dd or a tar, tar.gz or
  tar.bz2 package which is unpacked into the partition
 
-=item partitions are formated ext3 (only when image is given)
+=item * partitions are formated ext3 (only when image is given)
 and mounted to mount afterwards
 
 (this is why image exists at all, copyfile does not provide this)
 
-=item ``image'': absolute or relative path (relative to /data/tapper/live/repository/images/)
+=item * ``image'': absolute or relative path (relative to /data/tapper/live/repository/images/)
 
 If not given, then it re-uses the partition without formatting/unpacking it.
 
-=item partition: Can be /dev/XXX or LABEL or UUID.
+=item * partition: Can be /dev/XXX or LABEL or UUID.
 
 =back
 
@@ -337,11 +337,11 @@ If not given, then it re-uses the partition without formatting/unpacking it.
 
 =over 4
 
-=item git and hg are supported
+=item * git and hg are supported
 
-=item type and url are mandatory, target and revision are optional
+=item * type and url are mandatory, target and revision are optional
 
-=item target denotes the directory where the source is placed in, 
+=item * target denotes the directory where the source is placed in, 
 the leading slash can be left out (i.e., paths can be given relative
 to root directory C</>).
 
@@ -368,26 +368,26 @@ started when the machine boots.
 
 =over 4
 
-=item guest number
+=item * guest number
 
 If it is a guest, for host system use 0.
 
-=item test_program
+=item * test_program
 
 startet after boot by the PRC
 
-=item runtime
+=item * runtime
 
 The wanted time, how long it runs, in seconds, this value will be used
 to set an environment variable C<TAPPER_TS_RUNTIME>, which is
 used by the test suite wrappers.
 
-=item timeout_testprogram
+=item * timeout_testprogram
 
 Time that the testprogram is given to run, at most, after that it is
 killed (SIGINT, SIGKILL).
 
-=item guests
+=item * guests
 
 Only used for virtualization tests. Contains an array, one entry per
 guest which defines how a guest is started. Can be a SVM file for Xen
@@ -426,7 +426,7 @@ Please note some subtlety about quotes.
 
 =over 4
 
-=item This is YAML. And YAML provides its own way of quoting.
+=item * This is YAML. And YAML provides its own way of quoting.
 
 So this
 
@@ -454,7 +454,7 @@ you use quotes at other places like in
 then they are not part of the YAML line but part of the value, so this
 time the value is: C<--bar="hot stuff">.
 
-=item Quotes are not shell quotes.
+=item * Quotes are not shell quotes.
 
 So if you used quotes and they are not YAML quotes but part of the
 value then you should know that they are B<not> evaluated by a
@@ -465,7 +465,7 @@ That's why in above example the quoted value C<"hot stuff"> (with
 quotes!) is given as parameter C<--bar> to the program. This
 usually B<not> what you want.
 
-=item Summary: Yo nearly never need quotes.
+=item * Summary: Yo nearly never need quotes.
 
 This is good enough:
 
@@ -594,22 +594,22 @@ this document.)
 
 =over 4
 
-=item guest root always needs to name the file to mount since
+=item * guest root always needs to name the file to mount since
 its not easy or even impossible to get this name for some ways to install
 the root image (like tar.gz packages or subdir)
 
-=item guest root and guest config are installed inside the host, 
+=item * guest root and guest config are installed inside the host, 
 guest preconditions are installed inside the guest image
 
-=item guests can be started with xm create $xenconf, evaluation of
+=item * guests can be started with xm create $xenconf, evaluation of
 $kvmconf or executing the $execconf script, thus only one of these 
 three must be provided
 
-=item '''Note''': virt instead of virtualisation is used to reduce 
+=item * '''Note''': virt instead of virtualisation is used to reduce 
 confusion for users whether British English (virtualisation) or
 American English (virtualization) is expected
 
-=item key ``arch''
+=item * key ``arch''
  arch: linux64 | linux32             (needed for for tapper toolchain)
 
 =back
@@ -686,7 +686,7 @@ default value for the precondition key id.
 
 =over 4
 
-=item Macroprecondition
+=item * Macroprecondition
 
   # tapper-mandatory-fields: kernel_version
   # tapper-optional-fields: kernelpkg
@@ -727,7 +727,7 @@ default value for the precondition key id.
         timeout_testprogram: 90
 
 
-=item The test script
+=item * The test script
 
 The test script C<uname_tap.sh> to which the macro precondition
 refers is just a shell script that examines uname output:
@@ -744,7 +744,7 @@ refers is just a shell script that examines uname output:
   if uname -a | grep -vq x86_64 ; then echo -n "not " ; fi
   echo "ok - Looks like x86_64"
 
-=item Command line
+=item * Command line
 
 Once you wrote the macro precondition and the test script all you need
 is this command line:
@@ -939,24 +939,24 @@ Currently the following producers exist:
 
 =over 4
 
-=item DummyProducer.pm 
+=item * DummyProducer.pm 
 
 Dummy producer for testing.
 
-=item Kernel.pm
+=item * Kernel.pm
 
 Produces preconditions for kernel tests.
 
-=item NewestPackage.pm
+=item * NewestPackage.pm
 
 Produces a package precondition that installs the newest package from
 a given directory.
 
-=item SimnowKernel.pm
+=item * SimnowKernel.pm
 
 Produces preconditions for simnow kernel tests.
 
-=item Temare.pm
+=item * Temare.pm
 
 Wraps the existing temare producer utility.
 
@@ -974,16 +974,16 @@ Valid options:
 
 =over 4
 
-=item arch
+=item * arch
 
 May be x86_64 or i686. The latest kernel package from the associated
 path are used.
 
-=item version
+=item * version
 
 Only use kernel packages that contain the given version string
 
-=item stable
+=item * stable
 
 Use stable kernels when true
 

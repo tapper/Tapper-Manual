@@ -53,15 +53,15 @@ output.
 
 =over 4
 
-=item REPORTID
+=item * REPORTID
 
 The id of the report to which the file is assigned
 
-=item FILENAME
+=item * FILENAME
 
 The name of the file
 
-=item CONTENTTYPE
+=item * CONTENTTYPE
 
 Optional MIME type; defaults to C<plain>; use
 C<application/octet-stream> to make it downloadable later in
@@ -97,11 +97,11 @@ There is no other payload neccessary here, just this single line.
 
 =over 4
 
-=item REPORTID
+=item * REPORTID
 
 The id of the report to which the file is assigned
 
-=item FILENAME
+=item * FILENAME
 
 The name of the file as it was specified on upload
 
@@ -134,13 +134,13 @@ other template engines as well.
 
 =over 4
 
-=item debug=1
+=item * debug=1
 
 If C<debug> is specified and value set to 1 then any error message
 that might occur is reported as result content. If debug is omitted or
 false and an error occurs then the result is just empty.
 
-=item <<ENDMARKER 
+=item * <<ENDMARKER 
 
 You can choose any word instead of ENDMARKER which should mark the end
 of input, like in HERE documents, usually some word that is not
@@ -231,16 +231,16 @@ The filter expressions are best described by example:
 
 =over 4
 
-=item Select a report by ID
+=item * Select a report by ID
   { 'id' => 1234 }
 
-=item Select a report by suite name
+=item * Select a report by suite name
   { 'suite_name' => 'oprofile' }
 
-=item Select a report by machine name
+=item * Select a report by machine name
   { 'machine_name' => 'bascha' }
 
-=item Select a report by date
+=item * Select a report by date
 
 Here the value that you want to select is a structure by itself,
 consisting of the comparison operator and a time string:

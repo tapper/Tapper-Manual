@@ -4,13 +4,13 @@
 
 =over 4
 
-=item Get host usage/scheduling overview
+=item * Get host usage/scheduling overview
 
-=item Create hosts
+=item * Create hosts
 
-=item Create queues
+=item * Create queues
 
-=item Create hosts/queue bindings
+=item * Create hosts/queue bindings
 
 =back
 
@@ -20,7 +20,7 @@
 
 =over 4
 
-=item Show existing queues with priorities
+=item * Show existing queues with priorities
 
     $ tapper-testrun listqueue -v
             10 |              AdHoc |  1000
@@ -32,19 +32,19 @@
              9 |    xen-unstable-32 |   100
              8 |    xen-unstable-64 |   100
 
-=item Create new queue I<oprofile>
+=item * Create new queue I<oprofile>
 
   $ tapper-testrun newqueue --name=oprofile \
                             --priority=200
   12
 
-=item Create new host I<bullock> and bind it to queue I<oprofile>
+=item * Create new host I<bullock> and bind it to queue I<oprofile>
 
   $ tapper-testrun newhost --name=bullock \
                            --queue=oprofile
   10
 
-=item Show existing hosts
+=item * Show existing hosts
 
 Note that the new host I<bullock> is initially deactivated.
 
@@ -60,7 +60,7 @@ Note that the new host I<bullock> is initially deactivated.
              3 |   satyr |      active | in use
              7 |    uruk | deactivated |   free
 
-=item Activate host I<bullock>
+=item * Activate host I<bullock>
 
 Note that this command is ID based (bullock has id 10) because you
 can rename hosts.
@@ -68,7 +68,7 @@ can rename hosts.
     $ tapper-testrun updatehost --id=10 --active
     10 | bullock | active | free | oprofile
 
-=item Again, show existing hosts
+=item * Again, show existing hosts
 
 Host I<bullock> is now activated.
 
@@ -92,7 +92,7 @@ Done.
 
 =over 4
 
-=item List existing queues
+=item * List existing queues
 
     $ tapper-testrun listqueue -v
             10 |              AdHoc |  1000
@@ -105,13 +105,13 @@ Done.
              9 |    xen-unstable-32 |   100
              8 |    xen-unstable-64 |   100
 
-=item Update queue
+=item * Update queue
 
   $ tapper-testrun updatequeue --name=oprofile \
                                --priority=1000
   12
 
-=item Again, list existing queues
+=item * Again, list existing queues
 
     $ tapper-testrun listqueue -v
             10 |              AdHoc |  1000
@@ -135,29 +135,29 @@ features. Supported features are:
 
 =over 4
 
-=item hostname
+=item * hostname
 
-=item mem
+=item * mem
 
-=item vendor
+=item * vendor
 
-=item family
+=item * family
 
-=item model
+=item * model
 
-=item stepping
+=item * stepping
 
-=item revision
+=item * revision
 
-=item socket
+=item * socket
 
-=item cores
+=item * cores
 
-=item clock
+=item * clock
 
-=item l2cache
+=item * l2cache
 
-=item l3cache
+=item * l3cache
 
 =back
 

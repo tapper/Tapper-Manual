@@ -28,11 +28,11 @@ B<Remarks:>
 
 =over 4
 
-=item 3 single tests planned
+=item * 3 single tests planned
 
-=item the two first went good
+=item * the two first went good
 
-=item the last went wrong
+=item * the last went wrong
 
 =back
 
@@ -49,7 +49,7 @@ B<Remarks:>
 
 =over 4
 
-=item Missing test lines (eg. due to internal bummers) can be detected.
+=item * Missing test lines (eg. due to internal bummers) can be detected.
 
 =back
 
@@ -63,7 +63,7 @@ B<Remarks:>
 
 =over 4
 
-=item Parsing will later say `` test 2 expected but got 3''
+=item * Parsing will later say `` test 2 expected but got 3''
 
 =back
 
@@ -81,7 +81,7 @@ B<Remarks:>
 
 =over 4
 
-=item Readability.
+=item * Readability.
 
 =back
 
@@ -98,14 +98,14 @@ B<Remarks:>
 
 =over 4
 
-=item mark not yet working tests as "TODO"
+=item * mark not yet working tests as "TODO"
 
-=item allows test-first development
+=item * allows test-first development
 
-=item "ok" TODOs are recognized later
+=item * "ok" TODOs are recognized later
 
  ("unexpectedly succeeded")
-=item We also use it to ignore known issues with still being able to find
+=item * We also use it to ignore known issues with still being able to find
 
 them later.
 
@@ -124,7 +124,7 @@ B<Remarks:>
 
 =over 4
 
-=item comment the TODO reason
+=item * comment the TODO reason
 
 =back
 
@@ -141,9 +141,9 @@ B<Remarks:>
 
 =over 4
 
-=item mark tests when not really run (note it's set to ``ok'' anyway)
+=item * mark tests when not really run (note it's set to ``ok'' anyway)
 
-=item keeps succession numbers in sync
+=item * keeps succession numbers in sync
 
 =back
 
@@ -165,7 +165,7 @@ B<Remarks:>
 
 =over 4
 
-=item Unstructured details
+=item * Unstructured details
 
 =back
 
@@ -189,19 +189,19 @@ B<Remarks:>
 
 =over 4
 
-=item Structured details
+=item * Structured details
 
-=item allows parsable diagnostics
+=item * allows parsable diagnostics
 
-=item we use that to track values inside TAP
+=item * we use that to track values inside TAP
 
-=item have a leading test line with number+description
+=item * have a leading test line with number+description
 
-=item track complete data structures according to it
+=item * track complete data structures according to it
 
 =over 4
 
-=item e.g., benchmark results
+=item * e.g., benchmark results
 
 =back
 
@@ -226,9 +226,9 @@ B<Remarks:>
 
 =over 4
 
-=item we use diagnostics lines (``hot comments'')
+=item * we use diagnostics lines (``hot comments'')
 
-=item semantics only to our TAP applications
+=item * semantics only to our TAP applications
 
 =back
 
@@ -292,11 +292,11 @@ B<Remarks:>
 
 =over 4
 
-=item we recognize ``sections'', each with its own plan
+=item * we recognize ``sections'', each with its own plan
 
-=item allows structuring of results,
+=item * allows structuring of results,
 
-=item better readability later in web interface
+=item * better readability later in web interface
 
 =back
 
@@ -367,14 +367,14 @@ The resulting meta information hierarchy looks like this.
 =over 4
 
 
-=item Reportgroup
+=item * Reportgroup
 
   - testrun reportgroup ID
   - arbitrary reportgroup ID
 
 =over 4
 
-=item Report
+=item * Report
 
   - report ID
   - Tapper-suite-name
@@ -389,7 +389,7 @@ The resulting meta information hierarchy looks like this.
 
 =over 4
  
-=item Section
+=item * Section
 
   - Tapper-explicit-section-start
   - Tapper-ram
@@ -494,17 +494,17 @@ B<Remarks:>
 
 =over 4
 
-=item TAP::Parser
+=item * TAP::Parser
 
 =over 4
 
-=item C<prove> tool
+=item * C<prove> tool
 
-=item overall success and statistics
+=item * overall success and statistics
 
-=item allows C<formatters>
+=item * allows C<formatters>
 
-=item used to produce web reports
+=item * used to produce web reports
 
 =back
 
@@ -517,17 +517,17 @@ using the C<prove> command.
 
 =over 4
 
-=item TAP is easy to produce but using it B<usefully> can be a challenge.
+=item * TAP is easy to produce but using it B<usefully> can be a challenge.
 
-=item Use B<invariable> test descriptions.
+=item * Use B<invariable> test descriptions.
 
-=item Put meta information in diagnostics lines, B<not> into test descriptions.
+=item * Put meta information in diagnostics lines, B<not> into test descriptions.
 
-=item Use the description after C<# TODO/SKIP>.
+=item * Use the description after C<# TODO/SKIP>.
 
-=item Cheat visible (or: don't cheat invisible).
+=item * Cheat visible (or: don't cheat invisible).
 
-=item Really use C<# TODO/SKIP>.
+=item * Really use C<# TODO/SKIP>.
 
 =back
 
@@ -566,11 +566,11 @@ inside all guests with the following header:
 
 =over 4
 
-=item get the value:
+=item * get the value:
 
    TAPPER_REPORT_GROUP=`date|md5sum|awk '{print $1}'`
 
-=item use the value:
+=item * use the value:
 
    # Tapper-reportgroup-arbitrary: $TAPPER_REPORT_GROUP
 

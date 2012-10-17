@@ -53,34 +53,34 @@ the wrappers can use:
 
 =over 4
 
-=item TAPPER_TESTRUN
+=item * TAPPER_TESTRUN
 Currently active Testrun ID.
 
-=item TAPPER_SERVER
+=item * TAPPER_SERVER
 The controlling automation Server that initiated this testrun.
 
-=item TAPPER_REPORT_SERVER
+=item * TAPPER_REPORT_SERVER
 The target server to which the tests should report their results in
 TAP.
 
-=item TAPPER_REPORT_PORT
+=item * TAPPER_REPORT_PORT
 The target port to which the tests should report their results in
 TAP. Complements C<TAPPER_REPORT_SERVER>.
 
-=item TAPPER_REPORT_API_PORT
+=item * TAPPER_REPORT_API_PORT
 The port on which the more sophisticated Remote Reports API is
 available. It's running on the same host as
 C<TAPPER_REPORT_SERVER>.
 
-=item TAPPER_TS_RUNTIME
+=item * TAPPER_TS_RUNTIME
 Maximum runtime after which the testprogram will not be restarted when
 it runs in a loop. (This is a more passive variant than a timeout.)
 
-=item TAPPER_GUEST_NUMBER
+=item * TAPPER_GUEST_NUMBER
 Virtualisation guests are ordered, this is the guest number or 0 if
 not a guest.
 
-=item TAPPER_NTP_SERVER
+=item * TAPPER_NTP_SERVER
 The server where to request NTP dates from.
 
 =back
