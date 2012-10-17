@@ -148,6 +148,8 @@ PFEIFFER/%.eps: PFEIFFER/%.png
 
 %.tex: %.pod
 	pod2latex $<
+	perl -pni -e 's,^\\subsection\*,\\subsection,g' $@
+	perl -pni -e 's,^\\subsubsection\*,\\subsubsection,g' $@
 
 # dependencies
 
