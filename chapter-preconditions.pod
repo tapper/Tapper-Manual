@@ -25,6 +25,8 @@ top.
 
 =head2 Macro Preconditions
 
+=head2 Interdepending Testruns
+
 =head2 Testplans
 
 =head2 Precondition Producers
@@ -768,6 +770,59 @@ or with some more information (owner, topic):
      -Dkernel_version=2.6.28-rc3
 
 =back
+
+=head2 Interdepending Testruns
+
+This section describes interdepending testruns. Usually there is a one
+to one relation between a testrun and a host. This means a testruns uses
+exactly one host. There are use cases where this is not enough. A very
+common example is a client-server test. With the usually setup client
+and server would be separate testruns which would be scheduled
+separately whenever appropriate  machines are available. To make sure
+client and server testrun are scheduled and executed together you need
+to use the interdep scenario. An interdep scenario config may look like
+this:
+
+  scenario_type: interdep
+  description:
+  - requested_hosts:
+    - johnconnor
+    preconditions:
+    - arch: linux64
+      image: suse/sles11_baseimage.tar.gz
+      mount: /
+      partition: sda2
+      precondition_type: image
+    - precondition_type: testprogram
+      program: /opt/tapper/bin/tapper-testsuite-netperf-server
+      timeout: 1000
+  - requested_hosts:
+    - sarahconnor
+    preconditions:
+    - arch: linux64
+      image: suse/sles11_baseimage.tar.gz
+      mount: /
+      partition: sda2
+      precondition_type: image
+    - precondition_type: testprogram
+      program: /opt/tapper/bin/tapper-testsuite-netperf-client
+      timeout: 1000
+
+Write the scenario config above into a file and put it up for scheduling with:
+  tapper-testrun newscenario --file \
+      /data/ta/data/tapper/live/configs/scenarios/interdep.sc
+
+When the scheduler decides the first part of these two testruns is to
+run now, it will see that it is part of a scenario. It will therefore
+withhold the execution of this testrun. It will also mark all testruns
+belonging to the same scenario (one in this case) to bypass
+scheduling. This way the remaining testruns will be scheduled as soon as
+appropriate hosts become available. When hosts for all testruns are
+available they all will start their installation synchronously. Also,
+they will synchronize the start of their first test program
+automatically. This makes sure that client and server are started as
+close together as possible. 
+
 
 =head2 Testplans
 
