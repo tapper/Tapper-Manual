@@ -17,9 +17,9 @@ create the here described steps.
 
 =over 4
 
-=item Host B<tapper>: /data/tapper/live/
+=item * Host B<tapper>: /data/tapper/live/
 
-=item Host B<osko>: /export/image_files/official_testing/
+=item * Host B<osko>: /export/image_files/official_testing/
 
 =back
  

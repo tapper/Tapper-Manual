@@ -81,22 +81,22 @@ actual grub entry is written:
 
 =over 4
 
-=item C<$grubroot>
+=item * C<$grubroot>
 
 Substituted with something like C<(hd0,1)>.
 
-=item C<$root>
+=item * C<$root>
 
 Substituted with something like C</dev/sda2>.
 
-=item C<$TAPPER_TFTPSERVER>
+=item * C<$TAPPER_TFTPSERVER>
 
 Substituted with tfptserver IP address as configured in
 C</etc/tapper.cfg>, like:
 
   tftp_server_address:     165.204.15.222
 
-=item C<$TAPPER_KERNEL>
+=item * C<$TAPPER_KERNEL>
 
 Substituted with kernel image file as configured in
 C</etc/tapper.cfg>, like:
@@ -105,7 +105,7 @@ C</etc/tapper.cfg>, like:
     # kernel for installer
     installer_kernel: /tftpboot/bzImage
 
-=item C<$TAPPER_NFSROOT>
+=item * C<$TAPPER_NFSROOT>
 
 Substituted with NFS root filesystem as configured in
 C</etc/tapper.cfg>, like:
@@ -115,7 +115,7 @@ C</etc/tapper.cfg>, like:
      # (IP of central host "tapper")
      nfsroot: 165.204.15.222:/data/tapper/live/nfsroot/
 
-=item C<$TAPPER_OPTIONS>
+=item * C<$TAPPER_OPTIONS>
 
 Substituted with something like C<tapper_ip=165.204.15.222
 tapper_port=1337 testrun=777777 tapper_host=tapper
@@ -125,7 +125,7 @@ tapper_environment=live> (as one single line), where ``tapper_ip'' and
 hostname alternative to ``tapper_ip'' and ``tapper_environment'' sets
 the context (``live'' or ``development'').
 
-=item C<$HOSTOPTIONS>
+=item * C<$HOSTOPTIONS>
 
 This substitution is controlled by another entry in
 C</etc/tapper.cfg>:
@@ -150,9 +150,9 @@ console usage).
 
 =over 4
 
-=item Set booting order in BIOS to network first
+=item * Set booting order in BIOS to network first
 
-=item Configure DHCP for each connected machine
+=item * Configure DHCP for each connected machine
 
 The following example configures two hosts C<sarahconnor> and
 C<johnconnor> to use the respective files
@@ -190,7 +190,7 @@ host configure it with some grub/tftp redirection chains to in the end
 lead to the same files C</tftpboot/sarahconnor.lst> and
 C</tftpboot/johnconnor.lst> loaded from the MCP server.
 
-=item Force DHCP server to reread its configuration
+=item * Force DHCP server to reread its configuration
 
    $ kill -HUP $pid_of_dhcpd
 
@@ -203,14 +203,14 @@ configured as such:
 
 =over 4
 
-=item Install a TFTP server
+=item * Install a TFTP server
 
    $ sudo apt-get install inetutils-inetd
    $ sudo apt-get install atftpd
    $ sudo chmod 777 /var/lib/tftpboot/
    $ sudo ln -s /var/lib/tftpboot /tftpboot
 
-=item Create symlinks to point TFTP dir into Tapper working dir
+=item * Create symlinks to point TFTP dir into Tapper working dir
 
 The TFTP daemon only serves files from C</tftpboot>, as seen above
 in the DHCP config. To supply files from the Tapper working dir make
@@ -253,13 +253,13 @@ steps:
 
 =over 4
 
-=item Login as root on MCP server
+=item * Login as root on MCP server
 
-=item Set the C<PYTHONPATH> to include the I<temare> src directory
+=item * Set the C<PYTHONPATH> to include the I<temare> src directory
 
   export PYTHONPATH=$PYTHONPATH:/opt/tapper/python/temare/src
 
-=item Add the host to temare hostlist
+=item * Add the host to temare hostlist
 
    $ /opt/tapper/python/temare/temare hostadd $hostname \
                                                $memory \
@@ -286,7 +286,7 @@ Apache. Adapt your Apache config with the following:
   EOF
 
 
-=item Add the Tapper ssh key to your image.
+=item * Add the Tapper ssh key to your image.
 
   cat /home/tapper/.ssh/id_dsa.pub >> /root/.ssh/authorized_keys
 
