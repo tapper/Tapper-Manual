@@ -1,0 +1,208 @@
+=head1 Overview
+
+Tapper is an infrastructure for all aspects of testing, scaling from
+usage as simple test result database to managing complete test labs
+with testplan scheduling, machine install automation, and complex
+result evaluation.
+
+=head2 Infrastructure
+
+=head3 Automation
+
+=over 4
+
+=item * Network boot (PXE + TFTP + NFS)
+
+=item * Machine setup from scratch driven by YAML specfiles
+
+=item * Machine setup can be done by installing images, running
+kickstart/autoyast/preseed installer, or via Cobbler
+
+=item * Machine setup supports virtualization (Xen and KVM)
+
+=item * Alternatively using pre-installed machines via ssh
+
+=item * Image-based or kickstart/autoyast based installation
+
+=item * Lightweight status API to easily plug in foreign installers
+
+=item * Inject packages, programs, files into hosts/guests
+
+=item * Control execution of test scripts in hosts/guests
+
+=item * Interdependent setup and sync of co-operating machines
+
+=item * Complex timeout handling for complete test cycle, inclusive
+virtualizated guest
+
+=item * Reboot handling
+
+=item * Console logging
+
+=item * Hardware reset
+
+=back
+
+
+=head3 Scheduling
+
+=over 4
+
+=item * Optimize utilization of pools with "not enough" machines for
+"too many use-cases"
+
+=item * Multiplex queues of freely definable use-cases (e.g., Xen, KVM,
+baremetal kernels, ad-hoc tests, benchmarks) with different bandwidths
+
+=item * Pluggable core scheduling algorithm (default "Weighted Fair Queuing")
+
+=item * Feature driven host matching (by memory, cores, vendor, etc. or complex combinations)
+
+=item * Dynamic queue and host management (add, delete, de/activate)
+
+=item * Host/queue binding for dedicated scheduling
+
+=item * Auto re-queuing for continuous testing
+
+=item * Multi-host scenarios
+
+=back
+
+
+=head3 Web Application
+
+=over 4
+
+=item * Frontend to 2 databases: testruns and reports
+
+=item * Providing a "management view" and high-level test result evaluation
+
+=item * Overview lists and detailed zoom-in, GREEN/YELLOW/RED coloring
+
+=item * Filters over time, testsuites, machines, success status
+
+=item * RSS feeds on such filters
+
+=item * Visualize groups of connected results (virtualized neighbour
+guests)
+
+=item * Control start of testruns
+
+=back
+
+
+
+=head3 Result Evaluation
+
+=over 4
+
+=item * Programmable complement to the web frontend
+
+=item * Allow complex queries on the test result database
+
+=item * No client side toolchain neccessary
+
+=item * Easy API to send and get back queries embedded in templates
+
+=item * API allows SQL and XPath like queries in an abstract way
+
+=back
+
+
+
+=head3 Testplan Support
+
+=over 4
+
+=item * Testplans combine many Tapper features into concise points of
+interest
+
+=item * Manage testplan hierarchy allowing specfile reuse for complex testplan matrix
+
+=item * Interoperation with TaskJuggler on dedicated QA tasks for
+automatic scheduling and reporting
+
+=item * Consequently a complete focused QA life cycle of planning,
+execution and reporting
+
+=back
+
+
+
+=head3 Support for writing tests
+
+=over 4
+
+=item * Format test results based on standard Test Anything Protocol (TAP)
+
+=item * Existing standard TAP toolchains available for about 20
+programming languages
+
+=item * Dedicated Tapper support for Shell, Perl, Python available
+
+=back
+
+
+
+=head2 Many use-cases
+
+=over 4
+
+=item * Kernel testing (stress, function, reboot)
+
+=item * Virtualization Testing (Xen, KVM)
+
+=item * Test matrix of host/guest combinations
+
+=item * Distribution testing (like OS or compilers)
+
+=item * Multi-machine scenarios
+
+=item * Complex result evaluation
+
+=back
+
+
+
+=head2 Technology
+
+=over 4
+
+=item * Platform independent (primarily x86, but already seen on ARM)
+
+=item * Test Anything Protocol (TAP)
+
+=item * Core system written in Perl and CPAN
+
+=item * DB independent via OR mapper, developed on MySQL and SQLite
+
+=item * HTML/CSS, cautious Javascript
+
+=item * Language agnostic testing (e.g, Perl/Python/Shell test suites)
+
+=item * PXE, GRUB, TFTP, NFS boot automation
+
+=item * optional Cobbler integration
+
+=item * Strong decoupling of functional layers (webgui, testsuites, automation)
+to allow you to amalgamate your own infrastructure
+
+=back
+
+=head2 Correlation to autotest.kernel.org
+
+The main focus of C<autotest.kernel.org> project is on testing the
+Linux kernel. It provides a broad coverage of kernel functionality
+testing and wrappers of many existing test suites.
+
+C<Tapper> provides many complex scenarios, like virtualization
+(Xen/KVM), distribution testing (RHEL, SLES, Debian, Ubuntu), SimNow
+testing and benchmarking. C<Tapper> can schedule them all multiplexed
+according to "use-case bandwidths" over large or small machine pools.
+
+The C<autotest.kernel.org> client can be used in a C<Tapper>
+infrastructure via a thin wrapper that utilizes the TAP export we
+provided to the C<autotest> project.
+
+C<Tapper> then complements it with Testplan support, a result database
+and a homogeneous result evaluation API.
