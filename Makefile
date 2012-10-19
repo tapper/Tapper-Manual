@@ -3,21 +3,20 @@
 
 # -------------------------------------------------------------------
 
-# ::Pos1::
-
-# List of Author-IDs that provide a file "chapter-AUTHORID.pod"
-AUTHOR_IDS_POD = commandline infrastructure preconditions reports-api synopsis tap testsuites usecases webgui
-
-# -------------------------------------------------------------------
+CHAPTER_FILES = chapter-overview.tex \
+                chapter-synopsis.tex \
+                chapter-infrastructure.tex \
+	        chapter-tap.tex \
+                chapter-testsuites.tex \
+                chapter-preconditions.tex \
+	        chapter-commandline.tex \
+                chapter-webgui.tex \
+                chapter-reports-api.tex \
+	        chapter-usecases.tex
 
 EXTRA_FILES = $(shell find . -mindepth 2 -exec echo "{}" \; | grep -v "\.svn\/" | grep -v "\.git\/" | grep -v "\/\.svn$$" | grep -v "\/\.git$$" )
 
-PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo chapter-$${a}.tex ; done )
-
-DIST_PODAUTHOR_FILES = $(shell for a in $(AUTHOR_IDS_POD) ; do echo chapter-$${a}.pod ; done )
-
 LOGO_FILES = LOGOS/tapper-frontpage.eps
-
 
 TITLE = tapper-manual
 
@@ -27,12 +26,10 @@ MAIN = tapper
 
 STYLES = tapper.sty
 
-EXTRA_DIST = $(TEXFILES) $(EXTRA_FILES)
-
 CLEANFILES = $(addprefix $(MAIN).,aux toc log ind ilg idx) \
              $(TGZTARGET) \
              $(ZIPTARGET) \
-             $(PODAUTHOR_FILES)
+             $(CHAPTER_FILES)
 
 MAINTAINERCLEANFILES = $(MAIN).pdf $(MAIN).dvi $(MAIN).ps
 
@@ -42,7 +39,7 @@ MAINFILES = Makefile              \
             $(STYLES)             \
             $(MAIN).tex           \
             $(LOGO_FILES)         \
-            $(PODAUTHOR_FILES)    \
+            $(CHAPTER_FILES)      \
             $(PNG_AUTHOR_FILES)
 
 DOCFILES = README
@@ -53,56 +50,23 @@ TMPSUBDIR = $(TITLE)-$(VERSION)
 
 TMPDIR = $(TMPBASE)/$(TMPSUBDIR)
 
-DISTFILES = Makefile                  \
-            $(MAIN).tex               \
-            $(MAIN).ist               \
-            $(EXTRA_FILES)            \
-            $(STYLES)                 \
-            $(DOCFILES)               \
-            $(DIST_PODAUTHOR_FILES)
-
-
-ZIPTARGET = $(TITLE)-$(VERSION).zip
-
-TGZTARGET = $(TITLE)-$(VERSION).tgz
-
-
 # commands
 MAKEINDEX = makeindex -s $(MAIN).ist
 
 
 # PerlPoint stuff
 # CONVERT=PLEASE_CONFIGURE_MAKEFILE_FIRST
-CONVERT=convert
+CONVERT = convert
 
 # local targets
 # ps pdf
-all-local: pdf dvi misc
-	@echo ""
-	@echo "FILE OVERVIEW:"
-	@echo "  extra:" $(EXTRA_FILES)
-	@echo "  pod:"   $(PODAUTHOR_FILES)
-	@echo "  png:"   $(PNG_AUTHOR_FILES)
+all-local: pdf dvi
 
 clean:
 	rm -f $(CLEANFILES)
 
 mrproper: clean
 	rm -f $(MAINTAINERCLEANFILES)
-
-dist: zip
-
-tgz:
-	mkdir -p $(TMPDIR)
-	tar cf - $(DISTFILES) | tar -C $(TMPDIR) -xf -
-	tar -C $(TMPBASE) -czf $(TGZTARGET) $(TMPSUBDIR)
-	rm -fr $(TMPBASE)
-
-zip:
-	mkdir -p $(TMPDIR)
-	tar cf - $(DISTFILES) | tar -C $(TMPDIR) -xf -
-	cd $(TMPBASE) ; zip -r ../$(ZIPTARGET) $(TMPSUBDIR)
-	rm -fr $(TMPBASE)
 
 pdf: $(MAIN).pdf
 
@@ -156,31 +120,6 @@ PFEIFFER/%.eps: PFEIFFER/%.png
 $(MAIN).ps:  $(MAIN).dvi
 $(MAIN).pdf: $(MAIN).dvi
 $(MAIN).dvi: $(MAINFILES)
-
-# -------------------------------------------------------------------
-# conversions of POD/PerlPoint author articles
-
-# ::Pos2::
-
-# tex image dependencies
-
-# pod
-chapter-commandline.tex: chapter-commandline.pod
-chapter-infrastructure.tex: chapter-infrastructure.pod
-chapter-preconditions.tex: chapter-preconditions.pod
-chapter-reports-api.tex: chapter-reports-api.pod
-chapter-synopsis.tex: chapter-synopsis.pod
-chapter-tap.tex: chapter-tap.pod
-chapter-testsuites.tex: chapter-testsuites.pod
-chapter-usecases.tex: chapter-usecases.pod
-chapter-webgui.tex: chapter-webgui.pod
-
-# -------------------------------------------------------------------
-# misc activities
-
-misc:
-
-# -------------------------------------------------------------------
 
 ### Makefile ends here
 
