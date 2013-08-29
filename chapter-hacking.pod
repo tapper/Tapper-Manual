@@ -1,0 +1,81 @@
+=head1 Internal Perl Coding Guide
+
+=head2 Prefix Descriptions
+
+=over 4
+
+=item *
+
+    i   = Integer
+
+=item *
+
+    f   = Float
+
+=item *
+
+    b  = Boolean
+
+=item *
+
+    s  = String
+
+=item *
+
+    a  = Array
+
+=item *
+
+    h  = Hash
+
+=item *
+
+    d  = Date ( YYYY-MM-HH )
+
+=item *
+
+    dt = Datetime ( YYYY-MM-HH HH:MM:SS )
+
+=item *
+
+    fh = Filehandle
+
+=item *
+
+    ar = Array Reference
+
+=item *
+
+    hr = Hash Reference
+
+=item *
+
+    or = Object Reference
+
+=item *
+
+    fn = Sub Reference
+
+=item *
+
+    re = Regular Expression
+
+=back
+
+=over
+
+=head2 Function Names
+
+[RETURN_VALUE_PREFIX]_[FUNCTIONNAME]
+
+=back
+
+=over
+
+=head2 Variables Names
+
+[TYPE_PREFIX]_[VARIABLES_NAME]
+
+=back
+
+=over

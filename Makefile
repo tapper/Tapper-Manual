@@ -12,7 +12,8 @@ CHAPTER_FILES = chapter-overview.tex \
 	        chapter-commandline.tex \
                 chapter-webgui.tex \
                 chapter-reports-api.tex \
-	        chapter-usecases.tex
+	        chapter-usecases.tex \
+	        chapter-hacking.tex
 
 EXTRA_FILES = $(shell find . -mindepth 2 -exec echo "{}" \; | grep -v "\.svn\/" | grep -v "\.git\/" | grep -v "\/\.svn$$" | grep -v "\/\.git$$" )
 
