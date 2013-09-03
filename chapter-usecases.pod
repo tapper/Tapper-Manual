@@ -22,9 +22,9 @@ create the here described steps.
 =item * Host B<osko>: /export/image_files/official_testing/
 
 =back
- 
+
 =head3 Choose an image for Dom0 and images for each guest
- 
+
 We use suse/suse_sles10_64b_smp_raw.tar.gz as Dom0 and
 
 
@@ -32,7 +32,7 @@ We use suse/suse_sles10_64b_smp_raw.tar.gz as Dom0 and
 
 
 as the only guest.
- 
+
 The SuSE image is of precondition type image. Thus its path is
 relative to C</mnt/images> which has
 C<tapper:/data/tapper/live/repository/images/> mounted.
@@ -45,18 +45,18 @@ you need to add the following to the dom0 part of the Xen
 precondition:
 
 
-   root: 
+   root:
      precondition_type: image
-     mount: / 
-     image: suse/suse_sles10_64b_smp_raw.tar.gz 
+     mount: /
+     image: suse/suse_sles10_64b_smp_raw.tar.gz
      partition: /dev/sda2
 
- 
-The RedHat image is of type C<copyfile>. 
+
+The RedHat image is of type C<copyfile>.
 
 It is copied from
 C<osko:/export/image_files/official_testing/raw_img/> which is
-mounted to C</mnt/nfs> before. 
+mounted to C</mnt/nfs> before.
 
 This mounting is done automatically because the protocol type nfs is
 given. The image file is copied to the destination named as dest in
@@ -68,7 +68,7 @@ determined automatically, in other cases this is not possible
 (e.g. when you get it from a tar.gz package). The resulting root
 secition for this guest is:
 
-  
+
     root:
       precondition_type: copyfile
       name: osko:/export/images/testing/raw/redhat_rhel5u2_64b_smp_up_small_raw.img
@@ -77,12 +77,12 @@ secition for this guest is:
       mountfile: /xen/images/redhat_rhel5u2_64b_smp_up_small_raw.img
       mountpartition: p1
 
- 
+
 =head3 PRC configuration
- 
+
 PRC (Program Run Control) is responsible for starting guests and test
 suites.
- 
+
 =head4 Guest Start Configuration
 
 Making PRC able to start Xen guests is very simple. Every guest entry
@@ -92,7 +92,7 @@ filename have to be given. As for guest images the file name is needed
 because it can't be determined in some cases. We use 001.svm installed
 via copyfile to /xen/images/001.svm. The resulting config section is:
 
-  
+
       config:
         precondition_type: copyfile
         name: /usr/share/tapper/packages/mhentsc3/001.svm
@@ -100,9 +100,9 @@ via copyfile to /xen/images/001.svm. The resulting config section is:
         dest: /xen/images/
         filename: /xen/images/001.svm
 
- 
+
 =head4 Testsuite Configuration
- 
+
 You need to define, where you want which test suite to run. This can
 be done in every guest and the Dom0. In this example, the Dom0 and the
 single guest will run different testsuites. this chapter only
@@ -117,7 +117,7 @@ relative to
 '''tapper:/data/tapper/''' is mounted to '''/data/tapper/''' in
 the install system, this directory can be accessed at
 '''tapper:/data/tapper/live/repository/packages/'''.
- 
+
 Beside the precondition you need to define an execname which is the
 full path name of the file to be executed (remember, it can't be
 determined). This file is called in the root directory ('''/''') in
@@ -131,19 +131,19 @@ parameter is optional, leaving it out will result in Tapper waiting
 forever if your test doesn't send finish messages. The resulting
 testprogram section looks like this:
 
-  
+
     testprogram:
       precondition_type: package
       filename: tapper-testsuite-system.tar.gz
       path: mhentsc3/
       timeout_after_testprogram: ~
-      execname: /opt/system/bin/tapper_testsuite_system.sh 
-      parameters: 
+      execname: /opt/system/bin/tapper_testsuite_system.sh
+      parameters:
         - --report
 
- 
+
 =head3 Preconditions
- 
+
 Usually your images will not have every software needed for your tests
 installed. In fact the example images now do but for the purpose of
 better explanation we assume that we need to install dhcp, python-xml
@@ -160,13 +160,13 @@ precondition is appended to the precondition list of the appropriate
 guest entry, the System Installer will automatically know that the
 guest image has to be mounted and the precondition needs to be
 installed inside relative to this mount.
- 
+
 =head3 Resulting YAML config
- 
+
 After all these informations are gathered, put the following YAML text
 into a file. We use /tmp/xen.yml as an example.
 
-  
+
     precondition_type: xen
     name: SLES 10 Xen with RHEL5.2 guest (64 bit)
     dom0:
@@ -181,7 +181,7 @@ into a file. We use /tmp/xen.yml as an example.
         path: mhentsc3/
         timeout_after_testprogram: 3600
         execname: /home/tapper/x86_64/bin/tapper_testsuite_ctcs.sh
-        parameters: 
+        parameters:
           - --report
       preconditions:
         - precondition_type: package
@@ -244,9 +244,9 @@ into a file. We use /tmp/xen.yml as an example.
             filename: dhclient-4.0.0-6.fc9.x86_64.rpm
             path: mhentsc3/fedora9/
 
- 
+
 =head3 Grub
- 
+
 For Xen to run correctly, the defaults grub configuration is not
 sufficient. You need to add another precondition to your test. System
 Installer will replace C<$root> with the C</dev/*> notation of
@@ -255,7 +255,7 @@ root partition (including parenthesis). Put the resulting precondition
 into a file. We use C</tmp/grub.yml> as an example. This file may
 read like this:
 
-  
+
    precondition_type: grub
    config: |
     serial --unit=0 --speed=115200
@@ -266,9 +266,9 @@ read like this:
       root $grubroot
       kernel /boot/xen.gz com1=115200,8n1 console=com1
       module /boot/vmlinuz-2.6.18.8-xen root=$root showopts console=ttyS0,115200
-      module /boot/initrd-2.6.18.8-xen 
+      module /boot/initrd-2.6.18.8-xen
 
- 
+
 =head3 Order Testrun
 
 To order your test run with the previously defined preconditions you
@@ -280,35 +280,34 @@ server (as user C<tapper>). Make sure that
 C</opt/tapper/perl/perls/current/bin/> is at the beginning of your
 C<$PATH> (so the correct perl will always be found). For each
 precondition you want to put into the database you need to define a
-short name. Call C<tapper-testrun newprecondition> with the
+short name. Call C<tapper precondition-new> with the
 appropriate options, e.g. in our example:
 
-  
-  $ tapper-testrun newprecondition --shortname=grub \
+
+  $ tapper precondition-new --shortname=grub \
                                    --condition_file=/tmp/grub.yml
 
-  $ tapper-testrun newprecondition --shortname=xen \
+  $ tapper precondition-new --shortname=xen \
                                    --condition_file=/tmp/xen.yml
 
- 
-C<tapper-testrun> will return a precondition ID in each case. You
+
+C<tapper> will return a precondition ID in each case. You
 will need those soon so please keep them in mind. In the example the
 precondition id for grub is 4 and for Xen its 5.
- 
+
 You can now put your test run into the database using
-C<tapper-testrun new>. This expects a hostname, a test program and
+C<tapper testrun-new>. This expects a hostname, a test program and
 all preconditions. The test program is never evaluated and only there
 for historical reasons. Put in anything you like. Add C<--owner>
 with an appropriate user if you don't want the default
 C<tapper>. The resulting call looks like this:
- 
 
-  tapper-testrun new --hostname=bullock \
+
+  tapper testrun-new --requested_host=bullock \
                      --precondition=4 \
                      --precondition=5 \
-                     --test_program=whatever \
                      --owner=mhentsc3
- 
+
 
 Please note: There is a more central approach to describe all needed
 preconditions at once, see L<Macro Preconditions> and L<A real live example - kernel boot test>.

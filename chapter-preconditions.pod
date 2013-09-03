@@ -343,7 +343,7 @@ If not given, then it re-uses the partition without formatting/unpacking it.
 
 =item * type and url are mandatory, target and revision are optional
 
-=item * target denotes the directory where the source is placed in, 
+=item * target denotes the directory where the source is placed in,
 the leading slash can be left out (i.e., paths can be given relative
 to root directory C</>).
 
@@ -414,7 +414,7 @@ the following lesson:
 Such a precondition provides hints where normal behaviour needs to be
 changed. It contains any hash keys needed for the special handling. The
 special handling itself is done in the MCP and needs to be prepared
-for what you specify here. 
+for what you specify here.
 
 We currently use it to handle SimNow testing.
 
@@ -600,14 +600,14 @@ this document.)
 its not easy or even impossible to get this name for some ways to install
 the root image (like tar.gz packages or subdir)
 
-=item * guest root and guest config are installed inside the host, 
+=item * guest root and guest config are installed inside the host,
 guest preconditions are installed inside the guest image
 
 =item * guests can be started with xm create $xenconf, evaluation of
-$kvmconf or executing the $execconf script, thus only one of these 
+$kvmconf or executing the $execconf script, thus only one of these
 three must be provided
 
-=item * '''Note''': virt instead of virtualisation is used to reduce 
+=item * '''Note''': virt instead of virtualisation is used to reduce
 confusion for users whether British English (virtualisation) or
 American English (virtualization) is expected
 
@@ -648,7 +648,7 @@ preconditions and additional TemplateToolkit code.
 In most cases ``normal preconditions'' for similar tests will only
 differ in one or very few keys. Thus precondition files could easily
 be reused by only changing these few keys. This is made easier with
-using ``macro preconditions''. 
+using ``macro preconditions''.
 
 The macro precondition file should contain all ``normal
 preconditions'' to be reused. All variable keys should be substituted
@@ -671,7 +671,7 @@ render forms out of it and submit testruns from there.
 
 The values for the placeholders can be filled via such a command line:
 
-  $ tapper-testrun new [all usual options] \
+  $ tapper testrun-new [all usual options] \
        --macroprecond=FILENAME \
         -Did=value1 \
         -Dkernel=2.6.37
@@ -751,7 +751,7 @@ refers is just a shell script that examines uname output:
 Once you wrote the macro precondition and the test script all you need
 is this command line:
 
-  tapper-testrun new \
+  tapper testrun-new \
     --hostname=dickstone \
     --macroprecond \
       /data/tapper/live/repository/macropreconditions/kernel/kernel_boot.mpc \
@@ -760,7 +760,7 @@ is this command line:
 
 or with some more information (owner, topic):
 
-  tapper-testrun new \
+  tapper testrun-new \
     --owner=mhentsc3 \
     --topic=Kernel \
     --hostname=dickstone \
@@ -809,7 +809,7 @@ this:
       timeout: 1000
 
 Write the scenario config above into a file and put it up for scheduling with:
-  tapper-testrun newscenario --file \
+  tapper scenario-new --file \
       /data/ta/data/tapper/live/configs/scenarios/interdep.sc
 
 When the scheduler decides the first part of these two testruns is to
@@ -821,7 +821,7 @@ appropriate hosts become available. When hosts for all testruns are
 available they all will start their installation synchronously. Also,
 they will synchronize the start of their first test program
 automatically. This makes sure that client and server are started as
-close together as possible. 
+close together as possible.
 
 
 =head2 Testplans
@@ -856,7 +856,7 @@ C<multitest>, like this:
 The preconditions are then as already described in earlier chapters.
 
 It additionally allows to embed self-documentation which can be viewd
-with the command C<tapper-testrun newtestplan --guide --file
+with the command C<tapper testplan-new --guide --file
 my-testplan-file>.
 
 To take parameters and create multiple testruns, you could use it like
@@ -898,7 +898,7 @@ From a command line this can be used like below.
 
 Show self-doc:
 
-   $ tapper-testrun newtestplan --guide --file my-testplan
+   $ tapper testplan-new --guide --file my-testplan
 
      This is an example testplan
      Allowed params:
@@ -908,7 +908,7 @@ Show self-doc:
 
 Start a new testplan consisting of potentially many testruns:
 
-   $ tapper-testrun newtestplan --verbose \
+   $ tapper testplan-new --verbose \
                     --file my-testplan \
                     -Dqueue=TrackWorkload \
                     -Dtests=hackbench,dbench
@@ -994,7 +994,7 @@ Currently the following producers exist:
 
 =over 4
 
-=item * DummyProducer.pm 
+=item * DummyProducer.pm
 
 Dummy producer for testing.
 
