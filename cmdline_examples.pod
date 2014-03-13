@@ -9,29 +9,29 @@ and bind that queue to the host "calcium".
 
 =head2 Check host "calcium"
 
-  $ tapper-testrun listhost | grep calcium
+  $ tapper host-list | grep calcium
           16 | calcium
 
 So we know ID is 16.
 
 =head2 What runs currently on "Calcium"
 
-  $ tapper-testrun listhost --name calcium
+  $ tapper host-list --name calcium
   16 | calcium |      active |    testrun 49028 |                kvm | xen-3.4-testing-64 | xen-4.0-testing-64 |    xen-unstable-64 |      kernel_reboot |  Kernel-benchmarks |        kernel_osrc |        autoinstall
 
 =head2 Create dedicated queue "slbench-perl"
 
 Show existing viewes to get overview af existing queues:
 
-  $ tapper-testrun listqueue
+  $ tapper queue-list
 
 Create new queue:
 
-  $ tapper-testrun newqueue --name slbench-perl --priority 300
+  $ tapper queue-new --name slbench-perl --priority 300
 
 Activate queue:
 
-  $ tapper-testrun updatequeue --name slbench-perl --active
+  $ tapper queue-update --name slbench-perl --active
 
 =head2 Bind queue to host
 
@@ -43,7 +43,7 @@ With this command we delete all existing bound queues (delqueue with
 empty list) and bind it to the wanted queue (delqueue happens before
 addqueue):
 
-  $ tapper-testrun updatehost --id 16 --delqueue="" --addqueue slbench-perl
+  $ tapper host-update --id 16 --delboundqueue="" --addboundqueue slbench-perl
   16 | calcium | active | in use | slbench-perl
 
 =head2 If urgent we free host from currently running testrun
@@ -51,10 +51,10 @@ addqueue):
 You can either wait until currently running workload finishes, or you
 can hardly finish it:
 
-  $ tapper-testrun updatehost --id 16 --free
+  $ tapper host-update --id 16
 
 Check that it is free:
 
-  $ tapper-testrun listhost --name calcium
+  $ tapper host-list --name calcium
   16 | calcium |      active |             free | slbench-perl
 

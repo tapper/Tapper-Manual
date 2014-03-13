@@ -22,7 +22,7 @@
 
 =item * Show existing queues with priorities
 
-    $ tapper-testrun listqueue -v
+    $ tapper queue-list -v
             10 |              AdHoc |  1000
             11 |      kernel_reboot |   100
              4 | xen-3.3-testing-32 |   100
@@ -34,13 +34,13 @@
 
 =item * Create new queue I<oprofile>
 
-  $ tapper-testrun newqueue --name=oprofile \
+  $ tapper queue-new --name=oprofile \
                             --priority=200
   12
 
 =item * Create new host I<bullock> and bind it to queue I<oprofile>
 
-  $ tapper-testrun newhost --name=bullock \
+  $ tapper host-new --name=bullock \
                            --queue=oprofile
   10
 
@@ -48,7 +48,7 @@
 
 Note that the new host I<bullock> is initially deactivated.
 
-    $ tapper-testrun listhost -v
+    $ tapper host-list -v
              8 |  amarok | deactivated |   free
              1 |  athene |      active | in use
              9 |   azael | deactivated |   free
@@ -65,14 +65,14 @@ Note that the new host I<bullock> is initially deactivated.
 Note that this command is ID based (bullock has id 10) because you
 can rename hosts.
 
-    $ tapper-testrun updatehost --id=10 --active
+    $ tapper host-update --id=10 --active
     10 | bullock | active | free | oprofile
 
 =item * Again, show existing hosts
 
 Host I<bullock> is now activated.
 
-    $ tapper-testrun listhost -v
+    $ tapper host-list -v
              8 |  amarok | deactivated |   free
              1 |  athene |      active | in use
              9 |   azael | deactivated |   free
@@ -94,7 +94,7 @@ Done.
 
 =item * List existing queues
 
-    $ tapper-testrun listqueue -v
+    $ tapper queue-list -v
             10 |              AdHoc |  1000
             11 |      kernel_reboot |   100
             12 |           oprofile |   200 | bullock
@@ -107,13 +107,13 @@ Done.
 
 =item * Update queue
 
-  $ tapper-testrun updatequeue --name=oprofile \
+  $ tapper queue-update --name=oprofile \
                                --priority=1000
   12
 
 =item * Again, list existing queues
 
-    $ tapper-testrun listqueue -v
+    $ tapper queue-list -v
             10 |              AdHoc |  1000
             11 |      kernel_reboot |   100
             12 |           oprofile |  1000 | bullock
@@ -167,7 +167,7 @@ Freeing a host need the config for the currently running
 testrun. Thus, the command is only tested on bancroft and may not work
 on other machines.
 
-    $ tapper-testrun freehost \
+    $ tapper host-free \
                      --name=bullock\
                      --desc='I need this host right now'
 

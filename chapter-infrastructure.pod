@@ -231,8 +231,8 @@ the same absolute path name in both contexts (Tapper and TFTP):
 
 =head3 Make the hosts known in the TestrunDB
 
-   $ tapper-testrun newhost --name=sarahconnor --active=1
-   $ tapper-testrun newhost --name=johnconnor  --active=1
+   $ tapper host-new --name=sarahconnor --active=1
+   $ tapper host-new --name=johnconnor  --active=1
 
 This makes the hosts generally available (active) for scheduling
 testruns by machine name. For scheduling hosts by more detailed
